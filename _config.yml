@@ -1,9 +1,9 @@
 # Site settings
-title: Jonathon Belotti [thundergolfer]
-author: Jonathon Belotti
-description: "No hugs, some learning"
+title: Lucia Urcelay
+author: Lucia Urcelay
+description: "My personal webpage"
 baseurl: ""
-url: "https://thundergolfer.com"
+url: "https://luciaurcelay.github.io"
 date_format: "%b %-d, %Y"
 
 # Google services
@@ -26,10 +26,10 @@ extended_fonts: false
 enable_anchorjs: true
 
 # Social icons
-github_username: thundergolfer
+github_username: luciaurcelay
 stackoverflow_id:
-twitter_username: jonobelotti_io
-linkedin_username: jonathonbelotti
+twitter_username: Lucia_Urcelay
+linkedin_username: luciaurcelay
 
 text:
   pagination:

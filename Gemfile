@@ -5,4 +5,6 @@ source 'https://rubygems.org'
 # https://github.com/github/pages-gem
 gem 'github-pages'
 
+gem 'wdm', '>=0.1.0'
+
 gem "webrick", "~> 1.7"
