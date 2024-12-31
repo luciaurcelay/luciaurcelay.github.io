@@ -28,8 +28,13 @@ tags: publications
     </div>
     {% endfor %}
   </div>
-  {% include pagination.html %} {% if site.show_subscribe_cta %} {% include
-  subscribe.html %} {% endif %} {% else %}
-  <h1 class="center">{{ site.text.index.coming_soon }}</h1>
+  
+  {% include pagination.html %}
+  {% if site.show_contact %}
+    {% include contact.html %}
   {% endif %}
+  {% else %}
+    <h1 class="center">{{ site.text.index.coming_soon }}</h1>
+  {% endif %}
+
 </div>
