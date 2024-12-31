@@ -235,5 +235,4 @@ tailwind.config = {
 
 </style>
 
-{% include
-  subscribe.html %}
+
