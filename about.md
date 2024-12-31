@@ -20,6 +20,6 @@ targets in oncology, contributing to drug discovery. I leverage cancer cell line
 
 ### What I used to do
 
-Before joining Novartis, I spend almost two years working at [Barcelona Supercomputing Center](https://www.bsc.es), the spanish national center of supercomputing. During my time there, I was part of the [High Performance Artificial Intelligence](https://hpai.bsc.es/) group, where I conducted Deep Learning research for medical computer vision projects, specializing in embryology and vascular diseases using CT scans and microscopy imaging. I also contributed to the development and evaluation of medical Large Language Models and ensured the design of trustworthy AI systems by addressing biases, with a focus on healthcare applications
+Before joining Novartis, I spend almost two years working at [Barcelona Supercomputing Center](https://www.bsc.es), the spanish national center of supercomputing. During my time there, I was part of the [High Performance Artificial Intelligence](https://hpai.bsc.es/) group, where I conducted Deep Learning research for medical computer vision projects, specializing in embryology and vascular diseases using CT scans and microscopy imaging. I also contributed to the development and evaluation of medical Large Language Models and ensured the design of trustworthy AI systems by addressing biases, with a focus on healthcare applications.
 
 
