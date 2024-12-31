@@ -5,11 +5,7 @@ permalink: /library/
 tags: library read_list
 ---
 
-Selected books that I've read for enjoyment or learning. I also wrote [a post]({{ site.baseurl }}/read) about how I read.
-
-To see things I haven't yet read browse the [/anti-library]({{ site.baseurl }}/anti-library).
-
-All my book reviews are at [/reviews]({{ site.baseurl }}/reviews).
+Selected books that I've read for enjoyment or learning.
 
 <section style="display: flex; justify-content: space-between; flex-wrap: wrap">
 {% for member in site.data.library limit:120 %}
