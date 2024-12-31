@@ -7,7 +7,7 @@ tags: home
 
 ### I'm an AI Scientist with a focus on Computational Biology.
 
-### Currently, I am a Data Science postgraduate intern at Novartis working on RNAseq Foundational Models.
+### Currently, I am a Data Science postgraduate intern at Novartis working on scRNAseq Foundational Models.
 
 <br>
 
