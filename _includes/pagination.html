@@ -1,14 +1,9 @@
 <div class="pagination clearfix mb1">
   <div class="left">
     {% if paginator.previous_page %}
-      {% if paginator.page == 2 %}
-        <a href="{{ site.baseurl }}/">
-          <span class="left-circle-arrow"></span>
-        </a>
-      {% else %}
-        <a href="{{ paginator.previous_page_path }}">
-          <span class="left-circle-arrow"></span>
-        </a>
+      <a href="{{ paginator.previous_page_path }}">
+        <span class="left-circle-arrow"></span>
+      </a>
       {% endif %}
     {% else %}
         <a href="">
