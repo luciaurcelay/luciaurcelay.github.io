@@ -6,13 +6,13 @@
       method="POST"
     >
       <label for="name">Name:</label><br />
-      <input type="text" id="name" name="name" placeholder="Tobias" required /><br />
+      <input type="text" id="name" name="name" placeholder="John" required /><br />
       
       <label for="surname">Surname:</label><br />
-      <input type="text" id="surname" name="surname" placeholder="Funke" required /><br />
+      <input type="text" id="surname" name="surname" placeholder="Doe" required /><br />
       
       <label for="email">Your Email:</label><br />
-      <input type="email" id="email" name="email" placeholder="tobias.funke@example.com" required /><br />
+      <input type="email" id="email" name="email" placeholder="john.doe@example.com" required /><br />
       
       <label for="message">Your Message:</label><br />
       <textarea id="message" name="message" placeholder="Write your message here..." rows="5" required></textarea><br />
@@ -51,13 +51,23 @@
       border-style: none;
       font-size: 1em;
       border-radius: 0.5rem;
-      padding: 0.4rem; /* Reduced padding */
+      padding: 0.6rem;
       width: 100%;
-      margin-bottom: 0.3rem; /* Reduced margin */
+      margin-bottom: 0.3rem;
+    }
+
+    #contact input[type="message"],
+    #contact textarea {
+      border-style: none;
+      font-size: 1em;
+      border-radius: 0.5rem;
+      padding: 0.8rem; 
+      width: 100%;
+      margin-bottom: 0.3rem;
     }
   
     #contact textarea {
-      resize: none; /* Optional: prevents manual resizing */
+      resize: none; 
     }
   
     #contact input[type="submit"] {
