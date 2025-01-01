@@ -10,7 +10,7 @@ headshot: /images/headshot.jpg
 
 I was born and raised in the Basque Country, a northern region of Spain known for its food, rich culture, and stunning landscapes.
 
-I completed a bachelor's degree in Biomedical Engineering and then moved to Barcelona to pursue a master's degree in Artificial Intelligence. As a result, I am now conducting research at the intersection of AI and Biomedical Sciences.
+I completed a bachelor's degree in Biomedical Engineering and then moved to Barcelona to pursue a master's degree in Artificial Intelligence. As a result, I am now a researcher at the intersection of AI and Biomedical Sciences.
 
 ### What I do now
 
