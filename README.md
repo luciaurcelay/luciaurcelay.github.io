@@ -1,3 +1,3 @@
-# thundergolfer.github.io
+# luciaurcelay.github.io
 
-Just my website. This webpage has been developed from [thundergolfer](https://github.com/thundergolfer/thundergolfer.github.io). Big heads up!
+Just my website. This page was built using the template from [thundergolfer](https://github.com/thundergolfer/thundergolfer.github.io). A huge thanks to him for the inspiration and base design!
