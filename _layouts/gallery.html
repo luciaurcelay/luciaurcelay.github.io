@@ -1,0 +1,68 @@
+---
+layout: default
+title: Gallery
+---
+
+<div class="gallery-intro">
+    <h1>Through the lens.</h1>
+    <p>Here is a collection of some of my favorite photos, taken with both film and digital cameras.</p>
+  </div>
+
+<div class="gallery-container">
+  {% for image in site.static_files %}
+    {% if image.path contains '/images/gallery/resized/' %}
+      <div class="gallery-item">
+        <!-- Wrap image in a link -->
+        <a href="{{ image.path | relative_url }}" target="_blank" rel="noopener noreferrer">
+          <img src="{{ image.path | relative_url }}" alt="Gallery image">
+        </a>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<style>
+  /* Masonry Layout */
+  .gallery-container {
+    column-count: 3; /* Number of columns for large screens */
+    column-gap: 1rem;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  @media (max-width: 1200px) {
+    .gallery-container {
+      column-count: 3; /* For medium screens */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .gallery-container {
+      column-count: 2; /* For small screens */
+    }
+  }
+
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+  }
+
+  .gallery-item img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Link Styling */
+  .gallery-item a {
+    text-decoration: none; /* Remove link underline */
+  }
+</style>
