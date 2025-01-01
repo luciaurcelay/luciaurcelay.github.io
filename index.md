@@ -16,7 +16,7 @@ I am interested in the following research topics:
 - 🔬 **Protein Design**. One of my main research interests, focusing on AI for generating novel proteins and exploring their applications in science and medicine.
 - 🖌 **Foundation Models**.  Interested in the principles underlying these models and their applications in the omics space. 
 - 🧬 **Genomics/Transcriptomics**. Computational methods for processing genomics and transcriptomics data.
-- 🩻 **Medical Imaging**. This is where I discovered my passion for AI. I am interested in DL models for diagnosis and improving medical decision-making.
+- 🩻 **Medical Imaging**. Deep Learning models for diagnosis and improving medical decision-making.
 
 <br>
 
