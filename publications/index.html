@@ -25,6 +25,10 @@ tags: publications
         {% if post.summary %} {{ post.summary }} {% else %} {{ post.excerpt }}
         {% endif %}
       </p>
+      <p class="post-publisher">
+        {% if post.publisher %} {{ post.publisher }} {% else %} {{ post.excerpt }}
+        {% endif %}
+      </p>
     </div>
     {% endfor %}
   </div>
