@@ -18,7 +18,17 @@ tags: home
     img.center-image {
         display: block;
         margin: 0 auto;
+        max-width: 100%; /* Makes the image responsive and fit within the container */
+        height: auto; /* Maintains the image's aspect ratio */
     }
+
+    /* For mobile screens, let's increase the size */
+    @media (max-width: 768px) {
+        img.center-image {
+            width: 90%;  /* Make the image 90% of the screen width */
+        }
+    }
+</style>
 </style>
 
 
