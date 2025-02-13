@@ -26,7 +26,7 @@ tags: publications
         {% endif %}
       </p>
       <p class="post-publisher">
-        {% if post.publisher %} {{ post.publisher }} {% else %} {{ post.excerpt }}
+        {% if post.publisher %} {{ post.publisher }}
         {% endif %}
       </p>
     </div>
@@ -42,3 +42,23 @@ tags: publications
   {% endif %}
 
 </div>
+
+<style>
+  .post {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em; /* reduce vertical space between the posts */
+    margin-bottom: 1em; /* reduce the space below each post */
+  }
+
+  .post-meta {
+    margin-bottom: 0.25em; /* reduce space between the meta info and title */
+  }
+
+  .post-summary {
+    margin-bottom: 0.5em; /* reduce space between the summary and publisher */
+  }
+  
+  .post-publisher {
+    margin-bottom: 0.5em; /* reduce space between publisher and next element */
+  }
+</style>
