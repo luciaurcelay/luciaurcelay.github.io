@@ -10,11 +10,11 @@ headshot: /images/headshot.jpg
 
 I was born and raised in the Basque Country, a northern region of Spain known for its culture, gastronomy and landscapes.
 
-I hold a bachelor's degree in Biomedical Engineering and then moved to Barcelona to pursue a master's degree in Artificial Intelligence. As a result, I am now a researcher at the intersection of AI and Biomedical Sciences.
+I hold a bachelor's degree in Biomedical Engineering as well as a master's degree in Artificial Intelligence. As a result, I am now a researcher at the intersection of AI and Biomedical Sciences.
 
 ### What I do now
 
-I work in the [AI for Protein Design](https://www.aiproteindesign.com/) research group, led by Noelia Ferruz, at the [Centre for Genomic Regulation (CRG)](https://www.crg.eu/). Our research explores the intersection of foundation models and protein design.
+Currenlty, I work in the [AI for Protein Design](https://www.aiproteindesign.com/) research group, led by Noelia Ferruz, at the [Centre for Genomic Regulation (CRG)](https://www.crg.eu/). Our research explores the intersection of foundation models and protein design.
 
 
 ### What I used to do
