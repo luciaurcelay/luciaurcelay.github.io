@@ -4,7 +4,7 @@ title: Automatic Evaluation of Healthcare LLMs Beyond Question-Answering
 date: 2025-02-10
 categories: aloe llm
 summary:  We present a comprehensive, multi-axis suite for healthcare LLM evaluation, exploring correlations between open and close benchmarks and metrics
-publisher: NAACL 2025
+publisher: "<em>In: NAACL 2025</em>"
 permalink: automatic-evaluation-llms
 ---
 

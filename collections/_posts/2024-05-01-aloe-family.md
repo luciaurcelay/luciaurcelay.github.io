@@ -4,6 +4,7 @@ title: Aloe, A Family of Fine-tuned Open Healthcare LLMs
 date: 2024-05-01
 categories: aloe llm
 summary:  We introduce the Aloe family, a set of open medical LLMs highly competitive within its scale range
+publisher: "<em>Arxiv preprint 2024</em>"
 permalink: aloe-fine-tuned-llms
 ---
 
