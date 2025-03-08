@@ -6,7 +6,7 @@ tags: about
 headshot: /images/headshot.jpg
 ---
 
-I hold a bachelor's degree in Biomedical Engineering as well as a master's degree in Artificial Intelligence. As a result, I'm a researcher working at the intersection of AI and Science.
+I'm a Machine Learning Scientist researching protein design. I hold a bachelor's degree in Biomedical Engineering as well as a master's degree in Artificial Intelligence. As a result, I find myself working at the intersection of AI and Biosciences.
 
 ### What I do now
 
