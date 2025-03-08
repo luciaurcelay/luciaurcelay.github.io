@@ -6,7 +6,18 @@ tags: about
 headshot: /images/headshot.jpg
 ---
 
-I'm a Machine Learning Scientist researching protein design. I hold a bachelor's degree in Biomedical Engineering as well as a master's degree in Artificial Intelligence. As a result, I find myself working at the intersection of AI and Biosciences.
+I'm a **Machine Learning Scientist** researching **protein design**. I hold a bachelor's degree in Biomedical Engineering as well as a master's degree in Artificial Intelligence. As a result, I find myself working at the intersection of AI and Biosciences.
+
+<div>
+  <img 
+    id="headshot"
+    src="{{ page.headshot }}" 
+    alt="Lucia Urcelay Ganzabal" 
+    style="border-radius: 1em; max-width: 250px">
+</div>
+
+<br>
+
 
 ### What I do now
 

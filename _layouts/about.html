@@ -1,13 +1,7 @@
 ---
 layout: default
 ---
-<div>
-  <img 
-    id="headshot"
-    style="border-radius: 1em; max-width: 250px; float: right; margin: 1.25em;" 
-    src="{{ page.headshot }}"
-  >
-</div>
+
 <div class="post">
   <header class="post-header">
     <h1>{{ page.title }}</h1>
@@ -30,12 +24,29 @@ layout: default
   line-height: 1.5; /* Improve readability */
 }
 
+#headshot {
+  border-radius: 1em;
+  max-width: 250px; /* Adjust width for desktop */
+  margin-top: 1.25em;
+  margin: 1.25em;
+  float: right; /* Float image to the right on desktop */
+}
+
 @media screen and (max-width: 900px) {
   #headshot {
-    display: none;
+    float: none; /* Remove float on mobile */
+    display: block; /* Ensure the image is block-level */
+    margin-left: auto; /* Center the image */
+    margin-right: auto;
+    max-width: 80%; /* Adjust the width on smaller screens */
+    margin-top: 1.5em;
+    margin-bottom: 0.05em; /* Add margin to the top */
   }
 
+  .post-content {
+    clear: both; /* Ensures content starts below the image */
+  }
 
-  
 }
+
 </style>
