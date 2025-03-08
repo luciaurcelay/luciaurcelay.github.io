@@ -12,6 +12,4 @@ This information is only really useful for the site owner.
 
 `bundle exec jekyll server`
 
-### Library/Anti-Library
-
-TODO
+`bundle exec jekyll serve --host 192.168.1.135`
