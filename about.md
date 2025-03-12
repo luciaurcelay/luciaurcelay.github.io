@@ -31,3 +31,4 @@ Prior to joining CRG, I was a postgraduate intern in Novartis Institute of Biome
 Before joining Novartis, I spent two years working at [Barcelona Supercomputing Center](https://www.bsc.es), Spain's national center of supercomputing. During my time there, I was part of the [High Performance Artificial Intelligence](https://hpai.bsc.es/) group, where I conducted Deep Learning research for medical computer vision projects, specializing in embryology and vascular diseases using CT scans and microscopy imaging. I also contributed to the development and evaluation of medical Large Language Models and ensured the design of trustworthy AI systems by addressing biases, with a focus on healthcare applications.
 
 
+
