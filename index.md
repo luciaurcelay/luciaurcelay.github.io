@@ -3,9 +3,9 @@ layout: default
 tags: home
 ---
 
-# Lucia Urcelay Ganzabal
+# lucia urcelay ganzabal
 
-## Machine Learning Scientist working on Protein Design
+## ml research scientist working on protein design
 
 #### I work in the [AI for Protein Design](https://www.aiproteindesign.com/) research group, led by Noelia Ferruz, at the [Centre for Genomic Regulation (CRG)](https://www.crg.eu/). Our research explores the intersection of foundation models and protein design.
 
@@ -30,9 +30,9 @@ tags: home
 </style>
 
 <p style="margin-top: 25px;">
-  <a href="{{ site.baseurl }}/publications"><strong>See publications →</strong></a>  
+  <a href="{{ site.baseurl }}/publications"><strong>see publications →</strong></a>  
   <br>  
-  <a href="{{ site.baseurl }}/about"><strong>Know more about me →</strong></a>  
+  <a href="{{ site.baseurl }}/about"><strong>know more about me →</strong></a>  
 </p>
 
 <!--

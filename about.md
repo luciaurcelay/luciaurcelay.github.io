@@ -1,7 +1,7 @@
 ---
 layout: about
 permalink: /about/
-title: About me
+title: about me
 tags: about
 headshot: /images/headshot.jpg
 ---
@@ -19,12 +19,12 @@ I'm a **Machine Learning Scientist** researching **protein design**. I hold a ba
 <br>
 
 
-### What I do now
+### what I do now
 
 Currently, I work in the [AI for Protein Design](https://www.aiproteindesign.com/) research group, led by Noelia Ferruz, at the [Centre for Genomic Regulation (CRG)](https://www.crg.eu/) (Barcelona). Our research explores the intersection of foundation models and protein design.
 
 
-### What I used to do
+### what I used to do
 
 Prior to joining CRG, I was a postgraduate intern in Novartis Institute of Biomedical Research, located in Basel headquarters. My work was focused on scRNAseq foundation models to identify and prioritize novel therapeutic targets in oncology, contributing to drug discovery. I leveraged cancer cell line and patient datasets to perform in silico perturbation of single-cell expression profiles, simulating therapeutic effects. I also fine-tuned and evaluated foundation models to enhance their performance for specific oncology data.
 
