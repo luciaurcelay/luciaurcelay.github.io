@@ -3,55 +3,45 @@ layout: default
 tags: home
 ---
 
-# lucia urcelay ganzabal
+# lucia urcelay 🫐
 
 ## ml research scientist working on protein design
 
 #### I work in the [AI for Protein Design](https://www.aiproteindesign.com/) research group, led by Noelia Ferruz, at the [Centre for Genomic Regulation (CRG)](https://www.crg.eu/). Our research explores the intersection of foundation models and protein design.
 
-<!--
-<figure>
-  <img src="/images/protein_render.png" alt="3D protein." class="center-image">
-</figure>
-
-<style>
-    img.center-image {
-        display: block;
-        margin: 0 auto;
-        max-width: 65%;  /* Default width on larger screens */
-        height: auto;
-    }
-
-    /* For mobile screens, let's make the image bigger */
-    @media (max-width: 768px) {
-        img.center-image {
-            max-width: 100%;  /* Increase image size on mobile devices */
-        }
-    }
-</style>
--->
-
-<div id="molstar-container" style="width: 80%; height: 400px; margin: 0 auto; border-radius: 12px; overflow: hidden;"></div>
-
+<!-- Mol* CSS and JS -->
 <link rel="stylesheet" href="{{ '/assets/molstar/molstar.css' | relative_url }}">
 <script src="{{ '/assets/molstar/molstar.js' | relative_url }}"></script>
 
+<!-- Viewer container -->
+<div id="molstar-wrapper" style="display: flex; justify-content: center; margin: 2rem 0;">
+  <div id="molstar-container"
+       style="width: 400px; height: 300px; position: relative; border-radius: 8px; overflow: hidden;">
+  </div>
+</div>
+
+<!-- Mol* Viewer Script -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const viewer = new MolStar.Viewer('molstar-container', {
-      layoutIsExpanded: true,
-      layoutShowControls: false,
-      layoutShowRemoteControls: false,
-      layoutShowSequence: false,
-      layoutShowLog: false,
-      layoutShowLeftPanel: false,
-      viewportShowExpand: false
-    });
+    const molstar = window.molstar;
 
-    viewer.loadStructureFromUrl('https://files.rcsb.org/download/1QYS.pdb', 'pdb');
+    if (!molstar) {
+      console.error("Mol* not loaded");
+      return;
+    }
+
+    molstar.Viewer.create("molstar-container", {
+      layoutIsExpanded: false,
+      layoutShowControls: false,
+      layoutShowSequence: false,
+      layoutShowLeftPanel: false,
+      viewportShowExpand: true,
+      viewportShowSelectionMode: false,
+    }).then(viewer => {
+      viewer.loadPdb("6B68");
+    });
   });
 </script>
-
 
 
 <p style="margin-top: 25px;">

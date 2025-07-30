@@ -32,7 +32,7 @@ $viewport-medium: 48em;
 $viewport-large: 64em;
 
 // Header Colors
-$header-bg: rgba(#e0eefa,.0625) !default;
+$header-bg: white !default;
 $header-fg: black !default;
 
 // Colors
@@ -97,7 +97,7 @@ $form-field-padding-x: .5rem;
 
 // Code
 $pre-border-radius: 0;
-$pre-background-color: #fafafa;
+$pre-background-color: rgba(#f6f3fc, 1);
 $hljs-comment: $mid-gray;
 $hljs-keyword: $dark-blue;
 $hljs-name: $dark-gray;
@@ -119,6 +119,6 @@ $hljs-chunk: $light-gray;
 // Footer
 $footer-padding: $space-3;
 $footer-color: #000;
-$footer-bg-color: rgba(#e0eefa,.0625);
+$footer-bg-color: white;
 $footer-font-weight: 300;
 $footer-font-size: .75rem;
