@@ -3,7 +3,7 @@ layout: default
 tags: home
 ---
 
-# lucia urcelay 🫐
+# lucia urcelay
 
 ## ml research scientist working on protein design
 
