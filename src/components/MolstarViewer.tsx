@@ -90,6 +90,10 @@ export default function MolstarViewer() {
       if (!containerRef.current || disposed) return
 
       const spec = DefaultPluginUISpec()
+      spec.config = [
+        ...(spec.config ?? []),
+        [PluginConfig.General.ResolutionMode, 'native'],
+      ]
       spec.layout = {
         initial: {
           isExpanded: false,
