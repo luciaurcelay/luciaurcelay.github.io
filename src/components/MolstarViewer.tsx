@@ -36,9 +36,9 @@ const molstarStyles = `
   outline: none !important;
   border: none !important;
 }
+/* Do NOT override canvas width/height - Molstar sets these for correct devicePixelRatio.
+   Overriding breaks sharp rendering on Retina/mobile displays. */
 .molstar-viewer .msp-canvas {
-  width: 100% !important;
-  height: 100% !important;
   outline: none !important;
   border: none !important;
 }
@@ -93,6 +93,12 @@ export default function MolstarViewer() {
       spec.config = [
         ...(spec.config ?? []),
         [PluginConfig.General.ResolutionMode, 'native'],
+        [PluginConfig.Viewport.ShowExpand, false],
+        [PluginConfig.Viewport.ShowControls, false],
+        [PluginConfig.Viewport.ShowSettings, false],
+        [PluginConfig.Viewport.ShowSelectionMode, false],
+        [PluginConfig.Viewport.ShowAnimation, false],
+        [PluginConfig.Viewport.ShowTrajectoryControls, false],
       ]
       spec.layout = {
         initial: {
@@ -104,14 +110,6 @@ export default function MolstarViewer() {
         controls: { left: 'none', right: 'none', top: 'none', bottom: 'none' },
         remoteState: 'none',
       }
-      spec.config = [
-        [PluginConfig.Viewport.ShowExpand, false],
-        [PluginConfig.Viewport.ShowControls, false],
-        [PluginConfig.Viewport.ShowSettings, false],
-        [PluginConfig.Viewport.ShowSelectionMode, false],
-        [PluginConfig.Viewport.ShowAnimation, false],
-        [PluginConfig.Viewport.ShowTrajectoryControls, false],
-      ]
 
       if (pluginRef.current) {
         pluginRef.current.dispose()
@@ -125,6 +123,14 @@ export default function MolstarViewer() {
         spec,
       })
       pluginRef.current = plugin
+
+      // Force native resolution for sharp rendering on mobile/Retina (overrides Molstar's
+      // default of reducing resolution on mobile for performance). Must set after plugin init.
+      plugin.canvas3dContext?.setProps({ resolutionMode: 'native', pixelScale: 1 })
+      // Deferred resize ensures correct dimensions after layout (important on mobile)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => plugin.handleResize?.())
+      })
 
       if (plugin.canvas3d) {
         const { postprocessing, renderer, trackball } = plugin.canvas3d.props
