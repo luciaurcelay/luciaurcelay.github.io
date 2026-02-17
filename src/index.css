@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Absans font - extracted from absans-main */
+@font-face {
+  font-family: 'Absans';
+  src: url('/fonts/Absans-Regular.woff2') format('woff2'),
+       url('/fonts/Absans-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  /* Helvetica Neue font stack with system fallbacks */
+  html {
+    font-family: 'Helvetica Neue', Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface text-primary;
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: rgba(117, 226, 44, 0.3);
+    color: inherit;
+  }
+
+  /* Focus visible for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+}
+
+@layer components {
+  /* Link styling */
+  .link-underline {
+    @apply underline underline-offset-2 hover:opacity-70 transition-opacity duration-200;
+  }
+
+  /* Section container */
+  .section-container {
+    @apply w-full max-w-5xl mx-auto px-6 md:px-8;
+  }
+
+  /* Separator line */
+  .separator {
+    @apply w-full h-px bg-primary/20;
+  }
+
+  /* Constrain Mol* viewer to its container */
+  .molstar-viewer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .molstar-viewer .msp-plugin {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .molstar-viewer {
+    --msp-border-color: transparent;
+    --msp-control-border: transparent;
+    --msp-viewport-border: transparent;
+    --msp-foreground-color: transparent;
+  }
+
+  .molstar-viewer .msp-layout {
+    position: absolute;
+    inset: 0;
+  }
+
+  .molstar-viewer .msp-layout-right,
+  .molstar-viewer .msp-layout-left,
+  .molstar-viewer .msp-layout-top,
+  .molstar-viewer .msp-layout-bottom {
+    display: none !important;
+  }
+
+  .molstar-viewer .msp-viewport-axis,
+  .molstar-viewer .msp-viewport-top-left,
+  .molstar-viewer .msp-viewport-top-right,
+  .molstar-viewer .msp-viewport-bottom-left,
+  .molstar-viewer .msp-viewport-bottom-right {
+    display: none !important;
+  }
+
+  .molstar-viewer canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .molstar-viewer .msp-viewport,
+  .molstar-viewer .msp-viewport-canvas,
+  .molstar-viewer .msp-canvas-container,
+  .molstar-viewer .msp-plugin {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .molstar-viewer .msp-canvas,
+  .molstar-viewer .msp-viewport canvas {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+@layer utilities {
+  /* Animation delays for staggered reveals */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-700 { animation-delay: 700ms; }
+  .delay-800 { animation-delay: 800ms; }
+}
