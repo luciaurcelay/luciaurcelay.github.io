@@ -10,7 +10,6 @@ import { Asset } from 'molstar/lib/mol-util/assets'
 import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 
-const CHAIN_A_COLOR = Color(0xfff0d9)
 const CHAIN_B_COLOR = Color(0xa3a2fc)
 const CHAIN_B_COLOR_SURFACE = Color(0xf2f5ff)
 
