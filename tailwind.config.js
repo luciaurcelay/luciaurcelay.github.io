@@ -1,3 +1,5 @@
+import typography from '@tailwindcss/typography'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -45,7 +47,40 @@ export default {
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            '--tw-prose-body': '#333333',
+            '--tw-prose-headings': '#000000',
+            '--tw-prose-links': '#000000',
+            '--tw-prose-bold': '#000000',
+            '--tw-prose-counters': '#666666',
+            '--tw-prose-bullets': '#666666',
+            '--tw-prose-quotes': '#333333',
+            '--tw-prose-quote-borders': '#e5e5e5',
+            '--tw-prose-hr': '#e5e5e5',
+            h2: {
+              fontWeight: '500',
+              letterSpacing: '-0.01em',
+            },
+            h3: {
+              fontWeight: '500',
+            },
+            a: {
+              textDecoration: 'underline',
+              textUnderlineOffset: '2px',
+              fontWeight: 'inherit',
+              '&:hover': {
+                opacity: '0.7',
+              },
+            },
+            p: {
+              lineHeight: '1.5',
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [],
+  plugins: [typography],
 }

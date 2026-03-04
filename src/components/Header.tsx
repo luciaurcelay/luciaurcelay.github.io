@@ -3,11 +3,15 @@ import { motion } from 'framer-motion'
 
 const navLinks = [
   { label: 'publications', href: '/publications' },
+  { label: 'blog', href: '/blog' },
   { label: 'about', href: '/about' },
 ]
 
 export default function Header() {
   const location = useLocation()
+
+  const isActive = (href: string) =>
+    location.pathname === href || location.pathname.startsWith(href + '/')
 
   return (
     <motion.header
@@ -40,7 +44,7 @@ export default function Header() {
               <Link
                 to={link.href}
                 className={`text-lg transition-opacity duration-200 ${
-                  location.pathname === link.href
+                  isActive(link.href)
                     ? 'opacity-100'
                     : 'opacity-70 hover:opacity-100'
                 }`}

@@ -119,6 +119,27 @@
     outline: none !important;
     box-shadow: none !important;
   }
+
+  /* Blog content typography overrides */
+  .blog-content {
+    font-family: 'Helvetica Neue', Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .blog-content a {
+    transition: opacity 0.2s ease;
+  }
+
+  .blog-content h2 {
+    @apply mt-14 mb-6;
+  }
+
+  .blog-content h3 {
+    @apply mt-10 mb-4;
+  }
+
+  .blog-content img {
+    @apply rounded-sm;
+  }
 }
 
 @layer utilities {
