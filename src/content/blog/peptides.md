@@ -100,8 +100,6 @@ And then there's **PeptiVerse**, which doesn't generate peptides at all. It pred
 
 Taken together, the field is moving from "can we design something that binds?" to **"can we design something that binds and behaves like a drug?"**
 
-That's a much harder problem—and a more interesting one.
-
 
 ## Conclusion
 
