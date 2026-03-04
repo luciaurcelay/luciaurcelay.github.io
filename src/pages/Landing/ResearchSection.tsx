@@ -29,9 +29,9 @@ export default function ResearchSection() {
           >
             <p className="text-lg md:text-xl leading-relaxed">
               Current work focuses on uncovering <strong>evolutionary patterns</strong> in proteins and using them
-              as design principles for <strong>de novo protein generation</strong>.  I am particularly 
-              interested in  <strong>diffusion</strong> and <strong>flow-based</strong> models, as well 
-              as their applications in <strong>drug discovery</strong>, 
+              as design principles for <strong>de novo protein generation</strong>. I am particularly
+              interested in <strong>diffusion</strong> models, as well
+              as their applications in <strong>drug discovery</strong>,
               especially in <strong>immunotherapy</strong> and <strong>oncology</strong>.
             </p>
           </motion.div>

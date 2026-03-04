@@ -58,7 +58,7 @@ export default function BlogPost() {
             ← Back to blog
           </Link>
 
-          <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-medium tracking-tight leading-[1.8] mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-medium tracking-tight leading-tight mb-6">
             {post.title}
           </h1>
 
