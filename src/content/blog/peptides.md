@@ -6,7 +6,7 @@ date: 04/03/2026
 
 This blog post was inspired by a conversation I had with my lab colleagues during last Christmas' dinner. One of them casually mentioned something about a **"Chinese peptide rave"** happening in San Francisco in December 2025, to which I responded: what is even that about?
 
-The event went viral. Even **The New York Times** <sup><a href="#references">1</a></sup> covered it (https://www.nytimes.com/2026/01/03/business/chinese-peptides-silicon-valley.html). Pictures show a mix-your-own peptides workshop, a DJ spinning techno under projected chemical structures, and a dress code calling for "crazy futuristic cyberpunk attire."
+The event went viral. Even **The New York Times** <sup><a href="#references">1</a></sup> covered it. Pictures show a mix-your-own peptides workshop, a DJ spinning techno under projected chemical structures, and a dress code calling for "crazy futuristic cyberpunk attire."
 
 But the aesthetic is just the surface. The NYT reports that, according to U.S. customs data, imports of hormone and peptide compounds from China roughly **doubled to $328 million** in the first three quarters of 2025, up from $164 million in the same period of 2024. This includes demand for **GLP-1 analogues**, **melanotan II**, and various other peptides supplied through compounding pharmacies and **gray-market channels**.
 
