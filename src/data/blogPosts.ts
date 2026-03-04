@@ -1,4 +1,4 @@
-import peptidesContent from '../../peptides_blog.md?raw'
+import peptidesContent from '../content/blog/peptides.md?raw'
 import {
   generateExcerpt,
   calculateReadingTime,
