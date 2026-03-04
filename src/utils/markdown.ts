@@ -87,7 +87,20 @@ function preprocessMarkdown(content: string): string {
   return processed
 }
 
-marked.use({ gfm: true, breaks: false })
+marked.use({
+  gfm: true,
+  breaks: false,
+  renderer: {
+    heading({ text, depth }: { text: string; depth: number }) {
+      const slug = text
+        .replace(/<[^>]*>/g, '')
+        .toLowerCase()
+        .replace(/[^\w]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+      return `<h${depth} id="${slug}">${text}</h${depth}>\n`
+    },
+  },
+})
 
 export function renderMarkdown(content: string): string {
   const processed = preprocessMarkdown(content)
