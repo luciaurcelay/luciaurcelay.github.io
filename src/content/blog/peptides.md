@@ -72,7 +72,7 @@ Which naturally raises the question: how are new peptides being designed in the 
 
 ## ML for Peptide Design
 
-As an ML researcher, this whole landscape made me curious: what does the actual frontier of **computational peptide design** look like?
+This whole landscape made me curious: what does the actual frontier of **computational peptide design** look like?
 
 Peptide design is fundamentally a **constrained generative problem**: given a protein target (often with a shallow or "undruggable" interface), generate a short amino acid sequence that binds with high affinity, folds correctly, is stable, non-immunogenic, and manufacturable. That's a high-dimensional search space.
 
@@ -86,7 +86,7 @@ Other groups are probing the edges of biology. **D-Flow** <sup><a href="#referen
 
 Meanwhile, approaches like **PepEDiff** <sup><a href="#references">6</a></sup> question whether structure needs to be the central intermediate at all. Instead of building 3D models first, it generates binders directly in the **latent space of pretrained protein embeddings**, treating that manifold as a kind of semantic prior for binding. On challenging targets like **TIGIT**, this strategy appears competitive with structure-heavy pipelines.
 
-At the same time, models such as **PepFlow** <sup><a href="#references">7</a></sup> and **SurfFlow** <sup><a href="#references">8</a></sup> double down on geometry—explicitly modeling backbone frames, side-chain angles, and even **molecular surfaces**. SurfFlow's emphasis on surface features feels almost obvious in hindsight: binding is a surface phenomenon, so ignoring surface properties was always a simplification.
+At the same time, models such as **PepFlow** <sup><a href="#references">7</a></sup> and **SurfFlow** <sup><a href="#references">8</a></sup> double down on geometry, explicitly modeling backbone frames, side-chain angles, and even **molecular surfaces**. SurfFlow's emphasis on surface features feels almost obvious in hindsight: binding is a surface phenomenon, so ignoring surface properties was always a simplification.
 
 And then there's **PeptiVerse** <sup><a href="#references">9</a></sup>, which doesn't generate peptides at all. It predicts **developability properties**—stability, solubility, and other drug-relevant traits—across both canonical sequences and chemically modified peptides. That's a quiet but important pivot. **Binding affinity is necessary, but it's nowhere near sufficient**.
 
