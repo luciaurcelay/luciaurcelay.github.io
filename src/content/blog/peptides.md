@@ -95,7 +95,7 @@ Taken together, the field is moving from "can we design something that binds?" t
 
 ## Conclusion
 
-We are living in a strange peptide moment. On one side: rigorously tested **GLP-1 receptor agonists** transforming metabolic medicine and reshaping public health—and public aesthetics. On the other: a growing **gray market** of injectable peptides with limited human data, amplified by TikTok, podcasts, and techno-lit chemistry raves.
+We are living in a strange peptide moment. On one side: rigorously tested **GLP-1 receptor agonists** transforming metabolic medicine and reshaping public health, and public aesthetics. On the other: a growing **gray market** of injectable peptides with limited human data, amplified by TikTok, podcasts and livestreams.
 
 Meanwhile, in research labs and AI startups, **generative models** are learning to design macrocycles, D-peptides, surface-aware binders, and property-optimized therapeutics with **atomic precision**.
 
