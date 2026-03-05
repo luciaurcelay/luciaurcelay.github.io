@@ -38,7 +38,7 @@ export default function About() {
               <p className="text-lg md:text-xl leading-relaxed">
                 I&apos;m a <strong>Machine Learning Scientist</strong> working at the Centre for Genomic 
                 Regulation. I hold a bachelor&apos;s degree in Biomedical Engineering as well as a master&apos;s degree
-                in Artificial Intelligence. When I&apos;m not working you can find me doing yoga and painting!
+                in Artificial Intelligence from UPC. When I&apos;m not working you can find me doing yoga and painting!
               </p>
             </motion.div>
           </div>
