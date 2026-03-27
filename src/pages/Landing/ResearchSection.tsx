@@ -30,7 +30,7 @@ export default function ResearchSection() {
             <p className="text-lg md:text-xl leading-relaxed">
               Current work focuses on uncovering <strong>evolutionary patterns</strong> in proteins and using them
               as design principles for <strong>de novo protein generation</strong>. I am particularly
-              interested in <strong>structure-based generative mdodels</strong>, as well
+              interested in <strong>structure-based generative models</strong>, as well
               as their applications in <strong>drug discovery</strong>,
               especially in <strong>immunotherapy</strong> and <strong>oncology</strong>.
             </p>
