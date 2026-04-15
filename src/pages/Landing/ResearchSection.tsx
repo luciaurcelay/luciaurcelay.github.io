@@ -1,5 +1,7 @@
+import { lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
-import MolstarViewer from '../../components/MolstarViewer'
+
+const MolstarViewer = lazy(() => import('../../components/MolstarViewer'))
 
 export default function ResearchSection() {
   return (
@@ -15,7 +17,11 @@ export default function ResearchSection() {
             className="lg:col-span-6"
           >
             <div className="aspect-[4/3] w-full rounded-sm overflow-hidden bg-neutral-50">
-              <MolstarViewer />
+              <Suspense
+                fallback={<div className="h-full w-full animate-pulse bg-neutral-100" aria-hidden />}
+              >
+                <MolstarViewer />
+              </Suspense>
             </div>
           </motion.div>
 
