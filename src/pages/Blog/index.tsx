@@ -17,7 +17,7 @@ export default function Blog() {
             Blog
           </motion.h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div className="flex flex-col gap-0 max-w-2xl mx-auto">
             {blogPosts.map((post, index) => (
               <motion.div
                 key={post.slug}
@@ -29,9 +29,9 @@ export default function Blog() {
                   ease: 'easeOut',
                 }}
               >
-                <Link to={`/blog/${post.slug}`} className="group block">
-                  <article className="space-y-4">
-                    <div className="aspect-[16/10] w-full overflow-hidden rounded-sm">
+                <Link to={`/blog/${post.slug}`} className="group block py-6 border-b border-primary/10 first:border-t">
+                  <article className="flex gap-5 items-start">
+                    <div className="hidden sm:block flex-shrink-0 w-36 aspect-[16/10] overflow-hidden rounded-sm">
                       <img
                         src={post.coverImage}
                         alt={post.title}
@@ -39,16 +39,16 @@ export default function Blog() {
                       />
                     </div>
 
-                    <div className="space-y-3">
-                      <h2 className="text-xl md:text-2xl font-medium tracking-tight group-hover:opacity-70 transition-opacity duration-200 leading-snug">
+                    <div className="flex-1 space-y-2 min-w-0">
+                      <h2 className="text-lg font-medium tracking-tight group-hover:opacity-70 transition-opacity duration-200 leading-snug">
                         {post.title}
                       </h2>
 
-                      <p className="text-base text-primary-light leading-relaxed">
+                      <p className="text-sm text-primary-light leading-relaxed line-clamp-2">
                         {post.excerpt}
                       </p>
 
-                      <div className="flex items-center gap-3 text-sm text-primary/50">
+                      <div className="flex items-center gap-3 text-xs text-primary/50 pt-1">
                         <time dateTime={post.date}>
                           {formatDate(post.date)}
                         </time>
