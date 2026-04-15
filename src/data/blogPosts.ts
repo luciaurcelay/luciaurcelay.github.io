@@ -1,4 +1,6 @@
 import peptidesContent from '../content/blog/peptides.md?raw'
+import nipahContent from '../content/blog/nipah.md?raw'
+import flowMatchingContent from '../content/blog/flow-matching.md?raw'
 import {
   generateExcerpt,
   calculateReadingTime,
@@ -35,6 +37,8 @@ function createBlogPost(
 }
 
 export const blogPosts: BlogPost[] = [
+  createBlogPost('flow-matching', flowMatchingContent, '/flow-matching.png'),
+  createBlogPost('nipah', nipahContent, '/nipah-image.png'),
   createBlogPost('peptides', peptidesContent, '/peptides.jpeg'),
 ]
 
