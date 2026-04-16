@@ -140,6 +140,10 @@
   .blog-content img {
     @apply rounded-sm;
   }
+
+  .blog-content code {
+    word-break: break-all;
+  }
 }
 
 @layer utilities {

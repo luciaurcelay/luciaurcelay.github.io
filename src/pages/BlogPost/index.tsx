@@ -1,8 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getBlogPost } from '../../data/blogPosts'
 import { renderMarkdown, formatDate } from '../../utils/markdown'
+
+const MolstarViewerComplex = lazy(() => import('../../components/MolstarViewerComplex'))
+
+const MOLSTAR_PLACEHOLDER = '<div id="molstar-complex-placeholder"></div>'
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>()
@@ -70,10 +74,22 @@ export default function BlogPost() {
 
           <div className="separator mb-10 md:mb-14" />
 
-          <div
-            className="blog-content prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
+          {htmlContent.includes(MOLSTAR_PLACEHOLDER) ? (() => {
+            const [before, after] = htmlContent.split(MOLSTAR_PLACEHOLDER)
+            return (
+              <>
+                <div className="blog-content prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: before }} />
+                <div className="w-full rounded-sm overflow-hidden bg-neutral-50 my-10" style={{ height: '520px' }}>
+                  <Suspense fallback={<div className="h-full w-full animate-pulse bg-neutral-100" aria-hidden />}>
+                    <MolstarViewerComplex />
+                  </Suspense>
+                </div>
+                <div className="blog-content prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: after }} />
+              </>
+            )
+          })() : (
+            <div className="blog-content prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+          )}
         </article>
       </motion.div>
     </div>
