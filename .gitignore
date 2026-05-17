@@ -37,3 +37,6 @@ dist-ssr
 
 # TypeScript cache
 *.tsbuildinfo
+
+# Materials
+src/content/materials/*

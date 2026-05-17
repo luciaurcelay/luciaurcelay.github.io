@@ -10,7 +10,7 @@ import { Asset } from 'molstar/lib/mol-util/assets'
 import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 
-// Chain A (NiV-G glycoprotein target) — orange
+// Chain A (NiV-G glycoprotein target) — green
 const CHAIN_A_COLOR = Color(0x9fe3a2)
 const CHAIN_A_COLOR_SURFACE = Color(0xe6f5e7)
 
