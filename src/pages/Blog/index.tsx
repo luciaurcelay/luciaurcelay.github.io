@@ -33,7 +33,7 @@ export default function Blog() {
                   <article className="flex gap-5 items-start">
                     <div className="hidden sm:block flex-shrink-0 w-36 aspect-[16/10] overflow-hidden rounded-sm">
                       <img
-                        src={post.coverImage}
+                        src={post.thumbnailImage ?? post.coverImage}
                         alt={post.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                       />

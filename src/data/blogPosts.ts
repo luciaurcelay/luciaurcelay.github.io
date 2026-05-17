@@ -13,6 +13,7 @@ export interface BlogPost {
   title: string
   date: string
   coverImage: string
+  thumbnailImage?: string
   content: string
   excerpt: string
   readingTime: number
@@ -37,9 +38,9 @@ function createBlogPost(
 }
 
 export const blogPosts: BlogPost[] = [
-  createBlogPost('flow-matching', flowMatchingContent, '/flow-matching.png'),
-  createBlogPost('nipah', nipahContent, '/nipah-image.png'),
-  createBlogPost('peptides', peptidesContent, '/peptides.jpeg'),
+  createBlogPost('flow-matching', flowMatchingContent, '/flow_matching.png', { thumbnailImage: '/flow-matching-thumb.png' }),
+  createBlogPost('nipah', nipahContent, '/nipah_image.png', { thumbnailImage: '/nipah-thumb.png' }),
+  createBlogPost('peptides', peptidesContent, '/peptides.png', { thumbnailImage: '/peptides-thumb.png' }),
 ]
 
 export function getBlogPost(slug: string): BlogPost | undefined {
