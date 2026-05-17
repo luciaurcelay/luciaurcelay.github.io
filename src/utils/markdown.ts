@@ -1,4 +1,62 @@
 import { marked } from 'marked'
+import katex from 'katex'
+
+const renderMath = (expr: string, displayMode: boolean): string => {
+  try {
+    return katex.renderToString(expr, {
+      displayMode,
+      throwOnError: false,
+      strict: 'ignore',
+      output: 'html',
+    })
+  } catch {
+    return displayMode ? `<pre>${expr}</pre>` : `<code>${expr}</code>`
+  }
+}
+
+const mathBlock = {
+  name: 'mathBlock',
+  level: 'block' as const,
+  start(src: string) {
+    return src.match(/\$\$/)?.index
+  },
+  tokenizer(src: string) {
+    const match = /^\$\$\n?([\s\S]+?)\n?\$\$/.exec(src)
+    if (match) {
+      return {
+        type: 'mathBlock',
+        raw: match[0],
+        text: match[1].trim(),
+      }
+    }
+    return undefined
+  },
+  renderer(token: { text: string }) {
+    return `<div class="math-block">${renderMath(token.text, true)}</div>`
+  },
+}
+
+const mathInline = {
+  name: 'mathInline',
+  level: 'inline' as const,
+  start(src: string) {
+    return src.match(/\$(?!\s)/)?.index
+  },
+  tokenizer(src: string) {
+    const match = /^\$(?!\s)([^$\n]+?)\$(?!\d)/.exec(src)
+    if (match) {
+      return {
+        type: 'mathInline',
+        raw: match[0],
+        text: match[1].trim(),
+      }
+    }
+    return undefined
+  },
+  renderer(token: { text: string }) {
+    return renderMath(token.text, false)
+  },
+}
 
 export function extractDate(markdown: string): string {
   const firstLine = markdown.split('\n')[0]?.trim() || ''
@@ -90,6 +148,7 @@ function preprocessMarkdown(content: string): string {
 marked.use({
   gfm: true,
   breaks: false,
+  extensions: [mathBlock, mathInline],
   renderer: {
     heading({ text, depth }: { text: string; depth: number }) {
       const slug = text

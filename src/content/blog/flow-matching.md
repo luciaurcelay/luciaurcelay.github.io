@@ -1,133 +1,210 @@
-date: 13/04/2026
+date: 17/05/2026
 
-# A Primer on Flow Matching for Protein Design
+# A Primer on Flow Matching
 
 ## Introduction
 
-If you have been following the protein design literature over the past year, you have probably noticed a quiet but decisive shift. Models that used to be described as diffusion-based are now described as flow-matching-based. The titles changed, the benchmarks improved, and a handful of genuinely new architectures appeared. What actually changed, and why does it matter?
+A few years ago, score-based diffusion was the only serious answer to "how do you train a deep generative model that beats GANs on image quality without their training pathologies?" Today, that title has quietly passed to **flow matching**. Stable Diffusion 3, the latest video models, most state-of-the-art protein generators — they all train velocity fields with a flow-matching objective rather than scores with a denoising one. The mathematics is, in some sense, the same. The training recipe is much simpler.
 
-This post is a technical introduction to **flow matching** and its application to protein structure and sequence design. I will start from the mathematical foundations, explain how flow matching differs from diffusion, then walk through some of the most important models that have emerged from this paradigm: **La-Proteina**, **Proteina-Complexa**, **RFDiffusion2**, and **PPIFlow**.
+This post is a primer on the fundamentals of flow matching: the probability paths it builds, the velocity fields it learns, the loss it minimizes, and the algorithms that train and sample from it. We will work in two dimensions throughout so every idea has a picture next to it. A follow-up post will take these tools into protein design, where flow matching has become the new default for generating structures and binders.
 
-## What is Flow Matching?
+## The generative modeling problem
 
-To understand flow matching, it helps to start one level up, with **continuous normalizing flows (CNFs)**.
+A generative model has a single, slightly underwhelming job: given samples $x_1 \sim p_\text{data}$, produce more of them. We never observe $p_\text{data}$ — only finite samples from it — and the distribution itself is intractable to evaluate directly. Yet we want to sample from it on demand.
 
-A continuous normalizing flow is a generative model that transforms a simple source distribution, typically a Gaussian, into a complex target distribution (your data) via a continuously defined trajectory. Instead of a discrete sequence of transformation steps, a CNF defines a **velocity field** v_θ(x, t) that tells you, at every point in space and time, in which direction to move. You generate a sample by integrating an ordinary differential equation:
+Modern generative models all share the same workaround. Instead of trying to learn $p_\text{data}$ itself, they learn a **transport**: a deterministic or stochastic map that takes a sample from a simple distribution $p_0$ (almost always $\mathcal{N}(0, I)$) and pushes it to a sample from $p_\text{data}$ — equivalently, a smooth family of intermediate densities
 
-```
-dx/dt = v_θ(x(t), t),   x(0) ~ N(0, I)
-```
+$$
+p_t,\quad t \in [0, 1],\quad p_0 = \mathcal{N}(0, I),\quad p_1 \approx p_\text{data}.
+$$
 
-Integrate from t = 0 to t = 1, and you get a sample from the learned data distribution.
+The trick is that the *path* between $p_0$ and $p_1$ is a design choice. Different choices give different models — diffusion, flow matching, stochastic interpolants, Schrödinger bridges. What they have in common is that, once you have committed to a path, generating a sample reduces to evolving an initial noise point along it.
 
-The problem with traditional CNFs is training: computing the likelihood requires solving the ODE during each gradient step, which is expensive. **Flow matching** <sup><a href="#references">1</a></sup> solves this with a much simpler idea. Instead of training by maximum likelihood, you directly **regress the velocity field** against a target vector field that you can compute analytically:
+<div id="fm-distribution-morph"></div>
 
-```
-L = E[ ‖v_θ(x(t), t) − u_t(x(t) | x₁)‖² ]
-```
+Each dot above is a sample. At $t=0$ they are drawn from $\mathcal{N}(0, I)$; at $t=1$ they are drawn from a three-mode target. In between, the entire density of samples interpolates — particles do not appear or disappear, they *travel*. The job of a generative model is to learn the trajectories.
 
-where x₁ is a data sample and u_t is the conditional vector field pointing from the noisy sample toward x₁ at time t. This is **simulation-free**: no ODE solving during training, just straightforward regression. The result is a model that learns to transport noise to data along smooth, efficient trajectories.
+## Velocity fields and the continuity equation
 
-### Optimal Transport Paths
+If a sample is going to travel from noise to data, we need to say how. The cleanest description is a **velocity field**: a function $v_t(x)$ that, at every point in space and at every time $t$, tells a particle which way to move. A trajectory is then nothing more than the solution to an ordinary differential equation,
 
-A key design choice in flow matching is how to define the **probability path**, the interpolation between noise and data. The most principled choice is the **optimal transport (OT) path**, which corresponds to straight-line interpolation:
+$$
+\frac{dx_t}{dt} = v_t(x_t),\quad x_0 \sim p_0.
+$$
 
-```
-x(t) = (1 − t)·x₀ + t·x₁,   x₀ ~ N(0, I)
-```
+Integrate from $t=0$ to $t=1$ and you have a sample of $p_1$.
 
-Straight-line paths are optimal in the Wasserstein sense: they minimize the kinetic energy of the transport, and crucially, **they do not cross**. This last property has a practical consequence: the velocity field has lower variance and is easier to learn, which translates to better sample quality with far fewer integration steps.
+This particle-level picture has a density-level twin, the **continuity equation**, which describes how the density $p_t$ evolves under transport by $v_t$:
 
-### Flow Matching vs. Diffusion
+$$
+\frac{\partial p_t}{\partial t} = -\nabla_x \cdot (p_t \, v_t).
+$$
 
-Diffusion models, score-based generative models trained via denoising score matching, have been the dominant paradigm for structural biology applications since RFDiffusion in 2022. The comparison with flow matching is worth being precise about.
+In words: probability mass moves the way the velocity field says it does, and is conserved while it moves. The continuity equation is just the formal way of saying "particles travel under $v_t$, and probability is what they carry with them."
 
-Both frameworks learn to transform noise into data. The differences are architectural and operational:
+The two views are equivalent. The particle view is what you simulate when you sample. The density view is what tells you whether your samples will, in aggregate, land on the right distribution.
 
-- **Training dynamics**: diffusion requires estimating a score function ∇ log p_t(x) at each noise level; flow matching regresses a velocity field directly. Flow matching's objective has lower variance and does not require importance weighting over noise levels.
-- **Sampling paths**: diffusion models follow stochastic trajectories (Langevin dynamics or reverse SDEs), even in their ODE-based variants. OT-based flow matching uses straight, deterministic paths. Fewer steps needed, typically 10–20 ODE evaluations versus 50+ for diffusion.
-- **Scalability**: the simulation-free training objective and efficient sampling of flow matching make it substantially more tractable at the scale of full proteins. This is not a minor efficiency gain; it is what enables designs up to 800 residues where diffusion baselines start failing.
+<div id="fm-velocity-field"></div>
 
-Mathematically, score-based diffusion and Gaussian-source flow matching are equivalent in the limit, they both define probability paths over the same space. Flow matching is better understood as a **more efficient parameterization** of the same underlying generative process, with a training objective that happens to work much better in practice for high-dimensional structured data.
+Above, $v_t(x)$ is shown as a grid of arrows that change with $t$. Each arrow encodes a local rule for how a particle should move; sweeping $t$ shows how the same field looks at different stages of the flow. Mass is converging on the three modes of the target — but only because the entire field, evaluated everywhere and at every $t$, says so coherently. That coherence is what training will have to produce.
 
-## Why Proteins Are Hard
+## Continuous normalizing flows: the prequel
 
-Before getting into the models, it is worth stating clearly why protein design is a particularly challenging generative modeling problem.
+The first attempts to use this picture for generative modeling appeared as **continuous normalizing flows (CNFs)** in the late 2010s. A CNF parameterizes $v_t$ with a neural network $v_\theta(x, t)$ and trains it by maximum likelihood. For any data point $x_1$, the log-density can be obtained by integrating an instantaneous change-of-variables formula along the reverse trajectory:
 
-A protein is not just a sequence, and it is not just a structure, it is both simultaneously, coupled through the physics of folding. A generative model for protein design has to navigate several intertwined challenges:
+$$
+\log p_1(x_1) = \log p_0(x_0) - \int_0^1 \bigl(\nabla_x \cdot v_\theta\bigr)(x_t, t) \, dt,
+$$
 
-- **Mixed modalities**: the output includes a discrete sequence (20 amino acid types) and continuous 3D coordinates (backbone angles, side-chain positions), which live in very different mathematical spaces
-- **SE(3) symmetry**: the representation must be equivariant to rotations and translations, the same protein looks the same regardless of how it is oriented in space
-- **Hierarchy of constraints**: local geometry (bond lengths, angles, Ramachandran), secondary structure, global fold, and binding interface geometry all have to be simultaneously satisfied
-- **Sparse experimental feedback**: most designed sequences are never synthesized, let alone experimentally characterized, making it hard to close the loop between model predictions and ground truth
+where the divergence is evaluated along the reverse-ODE trajectory $t \mapsto x_t$ that starts at $x_1$ and ends at $x_0$. The objective is exact and the architecture is elegant. The training is unfortunately catastrophic at scale: every gradient step requires solving an ODE through the network, and every evaluation of $\log p_1$ requires a divergence — itself $\mathcal{O}(d)$ to compute exactly, or noisy to estimate with Hutchinson's trace. CNFs work, but the wall clock is brutal for anything beyond toy data.
 
-Flow matching addresses the first three challenges more elegantly than diffusion because its continuous, deterministic paths are easier to condition on auxiliary information (existing structure, binding site, functional motif) and because the OT interpolation aligns naturally with the physical intuition that a protein is folded by a continuous, energy-minimizing process.
+The lesson is that the *parameterization* (a neural velocity field driving an ODE) is the right one. The *training objective* (likelihood) is not.
 
-## State of the Art Models
+## Conditional probability paths
 
-### La-Proteina
+Flow matching's first idea is to swap the objective for something embarrassingly simple: regress $v_\theta(x_t, t)$ against a known target vector field $u_t(x_t)$ in $L^2$,
 
-**La-Proteina** <sup><a href="#references">2</a></sup> (NVIDIA Research / University of Oxford, 2025) is the first model in this family and sets up the architecture that the rest build on.
+$$
+\mathcal{L}_\text{FM}(\theta) = \mathbb{E}_{t,\,x_t}\bigl[\, \lVert v_\theta(x_t, t) - u_t(x_t) \rVert^2 \,\bigr].
+$$
 
-The core idea is a **partially latent representation**. Rather than generating all-atom structures directly in coordinate space (expensive, high-dimensional) or working only with backbone Cα traces (losing side-chain information), La-Proteina splits the representation:
-- **Backbone Cα coordinates** are kept in explicit 3D space and generated via flow matching
-- **Amino acid identity and side-chain conformations** are encoded into per-residue latent vectors using a VAE, and generated jointly in latent space
+The problem is immediate: we do not actually know $u_t$. The marginal velocity field is exactly the object the model is supposed to figure out. If we could write it down analytically, we would not need a network.
 
-This partial latency keeps the dimensionality of the generation problem manageable while preserving full-atom accuracy. The flow matching objective operates simultaneously over backbone coordinates and sequence latents, learning a joint distribution over structure and sequence.
+The second idea is what makes flow matching tractable: although the **marginal** field is unknown, we can choose a **conditional** field $u_t(x_t \mid x_1)$ that we *can* write down. Condition on a single data point $x_1$ and design a tiny probability path
 
-The practical result is striking: La-Proteina generates proteins up to **800 residues** with competitive all-atom co-designability metrics, in a regime where previous diffusion-based baselines collapse. It also supports motif scaffolding, conditioning on a functional motif and generating the surrounding structure, a key task for therapeutic protein engineering.
+$$
+p_t(\cdot \mid x_1)
+$$
 
-### Proteina-Complexa
+that interpolates from $p_0$ at $t=0$ to a Dirac at $x_1$ at $t=1$. Inside this conditional path, the velocity field is whatever we say it is, because *we built the path*. The promise — and we will see in a moment why it holds — is that training the network to match all of these conditional fields, one per data point, is the same as training it to match the unknown marginal field that we wanted in the first place.
 
-**Proteina-Complexa** <sup><a href="#references">3</a></sup> (NVIDIA Research, 2026, ICLR oral) extends the La-Proteina framework to **binder-target complexes**, arguably the most industrially relevant application of generative protein design.
+<div id="fm-conditional-paths"></div>
 
-The extension is non-trivial. Designing a binder requires the model to reason about interactions between two protein chains simultaneously, which demands pairwise geometric and chemical awareness. Proteina-Complexa adds a **pairformer module**, an attention architecture that explicitly constructs and refines pairwise representations between binder and target residues, and integrates test-time compute optimization to further improve binding predictions after generation.
+The colored cones above are the supports of three conditional paths, one per target. Inside each cone, every particle travels a known, simple trajectory toward its assigned $x_1$. Flow matching trains a single $v_\theta$ to fit all of those simple trajectories simultaneously. The marginal field — the one that respects all data at once — emerges from this fit, not by construction.
 
-The training data story is also notable. The authors construct **Teddymer**, a large-scale synthetic dataset of binder-target pairs, to pretrain the model before fine-tuning on experimentally characterized binders. This addresses the fundamental data scarcity problem: high-quality experimental binding data is limited, but plausible structural pairings can be generated computationally and used for pretraining.
+## Optimal transport paths
 
-The experimental validation is the most extensive published for any generative binder design model: in collaboration with Manifold Bio, the team tested approximately **one million designs across 127 targets** using multiplexed phage display. The result was binding activity against **68% of targets**, a success rate that represents a genuine step change relative to prior methods.
+The conditional path is a design choice and a consequential one. The choice that almost everyone makes is **optimal transport (OT)**: among all transports from $p_0$ to a target Dirac at $x_1$, choose the one whose particles travel in straight lines at constant speed. This is McCann's displacement interpolation, and in the limit where the target has zero variance it reads
 
-### RFDiffusion2
+$$
+x_t = (1-t)\, x_0 + t\, x_1,\quad x_0 \sim \mathcal{N}(0, I).
+$$
 
-**RFDiffusion2** <sup><a href="#references">4</a></sup> (Baker Lab / MIT, Nature Methods 2026) takes a different focus: **enzyme active site scaffolding**, the task of designing a protein that positions a small set of catalytic residues in precise geometric arrangements required for a chemical reaction.
+Differentiating in time gives the conditional velocity field:
 
-This is a particularly challenging conditioning problem. Enzyme design requires matching atomic-level functional group constraints, not just which residues to include, but which rotamer conformations they adopt, and how the surrounding scaffold supports them. Previous RFDiffusion-based approaches required users to specify residue indices and rotamer conformations explicitly, which demanded deep structural knowledge and severely limited the search space.
+$$
+u_t(x_t \mid x_1) = \frac{d x_t}{dt} = x_1 - x_0.
+$$
 
-RFDiffusion2 removes this requirement. It operates on **atom-level functional group specifications** and infers both rotamer conformations and residue identities as part of the generation process. Critically, it is **trained with flow matching** rather than the original diffusion objective, which the authors found to give superior training stability and generation efficiency at the atomic level, a finding consistent with the general pattern in the field.
+It does not get simpler than that. The label is a single difference: end point minus start point. There is no variance schedule to tune, no SDE coefficients, no separate noise grid. And because each conditional path is a straight line at constant speed, the *marginal* trajectories — averaged over the data — tend to stay close to straight too, which translates directly into fewer ODE steps at inference. They are not literally straight: where conditional paths overlap, the marginal field bends, as the velocity-field animation already showed.
 
-The benchmark results are clear: RFDiffusion2 successfully scaffolds all 41 active sites in a diverse benchmark, compared to 16 for the previous method. Three proof-of-concept designs were experimentally validated, with active catalytic variants found in each case using fewer than 96 sequences per target.
+OT paths are not the only choice. Diffusion-style "variance-preserving" and "variance-exploding" probability paths fit perfectly well into the flow matching framework; they just produce a curvier $v_t$ and need more steps to integrate. The dominant practical recipe is OT, and we will use it for the rest of this post. *(The animations below use a tiny but nonzero $\sigma_\text{target}^2$ to avoid numerical blow-up of the marginal field near $t = 1$; the conclusions are unchanged.)*
 
-### PPIFlow
+## The Conditional Flow Matching loss
 
-**PPIFlow** <sup><a href="#references">5</a></sup> (bioRxiv 2026) is focused specifically on **protein-protein interaction (PPI) design**, with an emphasis on high-affinity binder engineering and antibody design.
+Putting the two ideas together — conditional paths plus an $L^2$ objective — yields the loss that flow matching actually optimizes:
 
-The model uses **SE(3) flow matching** over rigid-body backbone frames, the standard approach for equivariant protein generation, where each residue is represented as a rotation and translation in 3D space. The velocity field is parameterized by a pairformer that reasons over both intra-chain and inter-chain residue pairs.
+$$
+\mathcal{L}_\text{CFM}(\theta) = \mathbb{E}_{t,\,x_1,\,x_0}\bigl[\, \lVert v_\theta(x_t, t) - (x_1 - x_0) \rVert^2 \,\bigr],
+$$
 
-PPIFlow's most interesting methodological contribution is **partial flow for affinity maturation**. Given a binder-target complex, you can fix the interface residues you want to preserve, perturb the remaining backbone to an intermediate time point on the flow trajectory, and then regenerate the perturbed region conditioned on the fixed interface. This is effectively a principled computational analog of directed evolution: iterate generation around a known scaffold to improve binding while preserving the core interaction geometry. The same procedure works for antibody design by fixing the CDR loops and regenerating the framework.
+with $t \sim \mathcal{U}[0, 1]$, $x_1 \sim p_\text{data}$, $x_0 \sim p_0$, and $x_t = (1-t) x_0 + t x_1$. Every term is known. There is no ODE to solve in training, no divergence to estimate, no importance weighting over noise levels. The model sees a triple $(x_t, t, x_1 - x_0)$ and learns to predict the third coordinate from the first two.
 
-## The Remaining Challenges
+The reason this works is one of the prettier facts in the area. Consider a point $x_t$ that lies in the overlap of two conditional paths — heading toward $x_1$ in one and toward $x_1'$ in another. The model is asked to predict two different velocity labels at the same input. There is no parameter setting that satisfies both. So what does it do?
 
-Flow matching has solved some problems in protein design more cleanly than diffusion. It has not solved the field.
+It minimizes squared error. The minimum-MSE estimate of two conflicting labels weighted by how often they occur is their conditional expectation. Once $(x_t, x_1)$ are fixed, the OT path pins down $x_0 = (x_t - t\,x_1)/(1-t)$, so the label simplifies to $x_1 - x_0 = (x_1 - x_t)/(1-t)$. Carrying this through, the optimum is
 
-The most persistent challenge remains the **gap between computational metrics and experimental activity**. Models like Proteina-Complexa are evaluated on ipTM, pDockQ, and interface pLDDT, confidence metrics from structure prediction models. These correlate with binding, but imperfectly. The Proteina-Complexa 68% target hit rate is impressive relative to previous methods, but it also means that roughly one in three targets produced no binders despite a million designs, and the million-design scale is not accessible to most practitioners.
+$$
+v_\theta^\ast(x_t, t) = \mathbb{E}_{x_1 \sim p_\text{data}(\,\cdot\, \mid x_t)}\!\left[\frac{x_1 - x_t}{1 - t}\right] = u_t(x_t),
+$$
 
-A second challenge is **functional specificity**. Flow matching models are getting very good at generating structurally plausible binders. Getting them to bind the right epitope, avoid off-target interactions, maintain selectivity across closely related homologs, and retain activity in physiological conditions, these require conditioning signals and evaluation pipelines that go well beyond structure prediction.
+the *marginal* velocity field — exactly the object we were trying to learn but did not know how to write down. The conflict at the level of individual labels is precisely what produces the right answer at the level of expectations. We chose a tractable conditional objective and got the intractable marginal objective for free.
 
-Finally, there is the question of **sequence space coverage**. Flow matching models learn from existing structures. The PDB is vast but biased, toward stable, well-folded, soluble, evolutionarily conserved proteins. De novo designs that fall outside this distribution may be geometrically valid by all computational metrics and still fail to fold as predicted in a real expression system. Closing this gap requires more experimental data, better feedback loops between computation and experiment, and probably generative models that are better calibrated about the uncertainty in their own predictions.
+<div id="fm-marginal-averaging"></div>
+
+The black arrow above is the marginal field at the probe; the colored arrows are the two conflicting conditional labels. As you drag the probe across the overlap, the marginal arrow tilts toward whichever target is more likely to have produced this $x_t$. The training loss does this tilt automatically through MSE.
+
+## The training algorithm
+
+The full training loop for OT-flow-matching fits in eight lines.
+
+1. **Sample data.** Draw $x_1 \sim p_\text{data}$.
+2. **Sample noise.** Draw $x_0 \sim \mathcal{N}(0, I)$.
+3. **Sample time.** Draw $t \sim \mathcal{U}[0, 1]$.
+4. **Interpolate.** Set $x_t = (1-t)\, x_0 + t\, x_1$.
+5. **Compute the velocity label.** Set $v^\ast = x_1 - x_0$.
+6. **Predict.** Evaluate $v_\theta(x_t, t)$.
+7. **Loss.** Compute $\lVert v_\theta(x_t, t) - v^\ast \rVert^2$.
+8. **Step.** Take a gradient step in $\theta$.
+
+That is the whole thing. There is no buffer of noisy latents, no schedule of variances to anneal, no separate score head. The network sees a linear interpolation between a real data point and a Gaussian sample, asks itself which direction it should be moving, and is told. Iterate; the marginal field emerges.
+
+A few small implementation notes are worth knowing. Time is usually sampled from a non-uniform distribution biased toward intermediate $t$, since the velocity label is largest there and the corresponding gradient signal is strongest. The network conditioning on $t$ is most often a sinusoidal embedding plus an MLP, as in diffusion models. And the architecture itself — UNet for images, transformer for protein structures or sequences — is essentially the same one that worked for score matching. Flow matching is a training recipe, not an architecture.
+
+## Inference
+
+Once the model is trained, sampling is a single line of pseudo-physics: drop a noise particle in the field and watch it flow.
+
+$$
+x_1 = x_0 + \int_0^1 v_\theta(x_t, t)\, dt,\quad x_0 \sim \mathcal{N}(0, I).
+$$
+
+In practice we approximate the integral. The cheapest approximation is forward Euler with $N$ steps,
+
+$$
+x_{t + \Delta t} = x_t + v_\theta(x_t, t)\, \Delta t,\quad \Delta t = 1/N,
+$$
+
+at the cost of one network evaluation per step. Higher-order solvers — Heun, RK4, adaptive methods — buy accuracy with more network calls per step. The headline trade-off is between **how curved the field is** and **how many steps you can afford**. A perfectly straight field requires one step. A field that loops and twists requires many.
+
+<div id="fm-inference-trace"></div>
+
+The animation above contrasts Euler integration with the underlying smooth flow. With five steps, the polyline cuts corners through curved regions and misses the target by a visible margin. With twenty it tracks the field closely. With a hundred it is indistinguishable from the continuous flow. The right number depends on the model — and on what you are willing to pay per sample.
+
+## Rectified flow
+
+The previous section hints at why anyone cares whether the field is straight: every bit of curvature costs steps, every step costs a network forward pass, and many real applications care about sample throughput. The natural next question is whether we can *make* the field straighter without changing the network or the objective.
+
+**Rectified flow** is a remarkably clean answer. The curvature in a trained $v_\theta$ comes from the fact that the training pairs $(x_0, x_1)$ are sampled *independently*: a noise vector is not assigned to any particular data point, so during training, paths from different sources to different targets cross all over the place. The marginal field has to compromise between these crossings, and the compromises bend the trajectories.
+
+The reflow procedure breaks that independence. After training a first model $v_\theta^{(1)}$, generate paired samples $(x_0, x_1)$ by sampling $x_0 \sim \mathcal{N}(0, I)$ and integrating the ODE under $v_\theta^{(1)}$ to obtain its $x_1$. Now retrain a new model $v_\theta^{(2)}$ on this coupling. The new pairs are aligned with whatever transport map the first model already learned, so far fewer of them cross. The retrained field is straighter. Sample again under it and a second reflow makes it straighter still.
+
+<div id="fm-reflow-demo"></div>
+
+The animation cycles through the reflow iterations of a tiny 1D-to-1D problem. The initial random coupling has many crossings. After a few iterations the lines untangle into a near-monotone matching, and the resulting flow can be integrated in a handful of Euler steps — sometimes one. Whether this is worth the cost of retraining depends on how often you plan to sample, but for large-scale image and protein models, rectified flow shows up everywhere.
+
+## Flow matching vs. diffusion
+
+It is worth being precise about the relationship to diffusion models, because they are mathematically closer than the marketing suggests.
+
+A score-based diffusion model defines a stochastic process — typically variance-preserving or variance-exploding — and trains a network to predict the score $\nabla_x \log p_t(x)$ at each noise level. Sampling reverses the process, either as a stochastic differential equation or, deterministically, as the *probability-flow ODE*. The qualifier matters: reverse-SDE samplers produce the same marginals as the ODE but different particle trajectories. Once you commit to the probability-flow ODE, the only thing distinguishing a diffusion model from a flow-matching model is which target the network was trained to predict — score vs. velocity — and which probability path was used.
+
+The two are connected by an explicit affine identity. For any Gaussian-conditional probability path $p_t(x \mid x_1) = \mathcal{N}(\alpha_t x_1, \sigma_t^2 I)$ — which covers OT, variance-preserving, and variance-exploding paths as special cases — the marginal velocity field can be written as
+
+$$
+v_t(x) = \frac{\dot\alpha_t}{\alpha_t}\,x \;-\; \left(\frac{\dot\alpha_t}{\alpha_t}\sigma_t^2 - \dot\sigma_t\, \sigma_t\right) \nabla_x \log p_t(x).
+$$
+
+For the OT schedule ($\alpha_t = t$, $\sigma_t = 1 - t$) this collapses to $v_t(x) = (1/t)\,x - ((1-t)/t)\, \nabla_x \log p_t(x)$. A score model is, up to a closed-form transformation, a velocity model — and vice versa.
+
+What flow matching changes is the *training* path: straight, deterministic, with a closed-form $u_t$, no SDE-to-reverse-SDE bookkeeping, and a loss that does not need importance weighting across noise scales. Empirically this trains faster, scales better, and produces flatter trajectories that need fewer integration steps. Nothing about flow matching is *more expressive* than diffusion. It is a more efficient parameterization of the same idea.
+
+## A brief look at applications
+
+These mechanics are why flow matching has taken over so much of generative modeling in the last two years. The straight-line OT path is well-suited to high-dimensional structured outputs — pixels, voxels, protein backbones — because it does not impose extra curvature on top of whatever curvature the data demands. Stable Diffusion 3 and Flux switched to *(rectified)* flow matching for exactly this reason. So did **La-Proteina**, **Proteina-Complexa**, **RFDiffusion2**, and **PPIFlow** on the protein side, where the same conditional-path framework now handles backbones, all-atom structure, binder–target complexes, and active-site scaffolding. Despite the name, RFDiffusion2 trains with a flow-matching objective on SE(3) — diffusion in spirit, flow matching in practice. A future post will look at how those models adapt the recipe in this post — SE(3) equivariance, partially latent representations, motif conditioning — to the specifics of designing proteins. The math you have just walked through is the engine; structural biology is where the engine has been doing the most interesting work.
 
 ## Conclusion
 
-Flow matching has earned its place as the new standard for generative protein design. Its mathematical properties, straight-line OT paths, simulation-free training, deterministic sampling, translate directly into practical advantages: faster training, fewer inference steps, and better scaling to large structures and complexes.
+Flow matching is, at its core, three ideas stacked on top of each other. Pick a probability path between noise and data that you can write down conditionally. Use the optimal-transport choice so that path is a straight line. Train a single velocity network by MSE against the difference $x_1 - x_0$, and trust the expectation to clean up the conflicting labels. Everything else — the ODE solver at inference, the reflow trick for straighter trajectories, the choice of architecture — is engineering on top of those three.
 
-The models built on this foundation, La-Proteina, Proteina-Complexa, RFDiffusion2, PPIFlow, are not incremental updates. They represent a qualitative expansion in what computational protein design can attempt: full-atom all-at-once generation, million-scale binder campaigns, atomic-level enzyme scaffolding, and principled affinity maturation. The benchmark numbers are better than anything we had two years ago.
-
-But the hardest part of the problem has not changed. A model that generates a confident-looking binder structure is not the same as a model that generates a binder. The gap between in silico and in vitro remains the dominant challenge, and the models that close it will not just be better at generating structures. They will be better at knowing when to trust themselves.
-
+What you get is a generative model with the expressiveness of diffusion, the training simplicity of a regression, and sampling that costs less because the trajectories were straight to begin with. None of the individual pieces are new. The way they fit together is.
 
 ## References
 
-	1.	Lipman Y. et al. (2022). Flow Matching for Generative Modeling. arXiv:2210.02747. https://arxiv.org/abs/2210.02747
-	2.	La-Proteina: Atomistic Protein Generation via Partially Latent Flow Matching. arXiv:2507.09466 (2025). https://arxiv.org/abs/2507.09466
-	3.	Proteina-Complexa: Scaling Atomistic Protein Binder Design with Generative Pretraining and Test-Time Compute. arXiv:2603.27950 (2026). https://arxiv.org/abs/2603.27950
-	4.	Atom-level enzyme active site scaffolding using RFdiffusion2. *Nature Methods* (2026). https://www.nature.com/articles/s41592-025-02975-x
-	5.	PPIFlow: High-Affinity Protein Binder Design via Flow Matching and In Silico Maturation. bioRxiv (2026). https://github.com/Mingchenchen/PPIFlow
+1. Lipman, Y. et al. (2022). *Flow Matching for Generative Modeling*. arXiv:2210.02747. [https://arxiv.org/abs/2210.02747](https://arxiv.org/abs/2210.02747)
+2. Liu, X., Gong, C., Liu, Q. (2022). *Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow*. arXiv:2209.03003. [https://arxiv.org/abs/2209.03003](https://arxiv.org/abs/2209.03003)
+3. Albergo, M. S., Boffi, N. M., Vanden-Eijnden, E. (2023). *Stochastic Interpolants: A Unifying Framework for Flows and Diffusions*. arXiv:2303.08797. [https://arxiv.org/abs/2303.08797](https://arxiv.org/abs/2303.08797)
+4. Tong, A. et al. (2024). *Improving and Generalizing Flow-Based Generative Models with Minibatch Optimal Transport*. TMLR. arXiv:2302.00482. [https://arxiv.org/abs/2302.00482](https://arxiv.org/abs/2302.00482)
+5. Chen, R. T. Q. et al. (2018). *Neural Ordinary Differential Equations*. NeurIPS. [https://arxiv.org/abs/1806.07366](https://arxiv.org/abs/1806.07366)
+6. Lipman, Y. et al. (2024). *Flow Matching Guide and Code*. Meta AI. [https://arxiv.org/abs/2412.06264](https://arxiv.org/abs/2412.06264)
+7. Esser, P. et al. (2024). *Scaling Rectified Flow Transformers for High-Resolution Image Synthesis (Stable Diffusion 3)*. ICML. [https://arxiv.org/abs/2403.03206](https://arxiv.org/abs/2403.03206)
