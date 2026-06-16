@@ -72,8 +72,8 @@ export default function HeroSection() {
             and encoding them as design principles for{' '}
             <strong>de novo protein generation</strong>. I'm primarily interested in {' '}
             <strong>structure-based generative models</strong>, flow matching and diffusion,
-            alongside <strong>protein language models</strong> and structure prediction. I am especially
-            interested in their applications to <strong>drug discovery</strong>, with a focus on{' '}
+            alongside <strong>protein language models</strong> and structure prediction. I am also drawn 
+            to their applications to <strong>drug discovery</strong>, with a focus on{' '}
             <strong>antibody and nanobody design</strong> for <strong>immunotherapy</strong> and{' '}
             <strong>oncology</strong>.
           </p>
