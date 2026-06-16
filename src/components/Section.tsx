@@ -5,6 +5,7 @@ interface SectionProps {
   children: ReactNode
   className?: string
   id?: string
+  maxWidthClassName?: string
 }
 
 const sectionVariants: Variants = {
@@ -18,7 +19,12 @@ const sectionVariants: Variants = {
   },
 }
 
-export default function Section({ children, className = '', id }: SectionProps) {
+export default function Section({
+  children,
+  className = '',
+  id,
+  maxWidthClassName = 'max-w-6xl',
+}: SectionProps) {
   return (
     <motion.section
       id={id}
@@ -28,7 +34,7 @@ export default function Section({ children, className = '', id }: SectionProps) 
       variants={sectionVariants}
       className={`w-full px-6 md:px-12 lg:px-16 ${className}`}
     >
-      <div className="max-w-6xl mx-auto">{children}</div>
+      <div className={`${maxWidthClassName} mx-auto`}>{children}</div>
     </motion.section>
   )
 }

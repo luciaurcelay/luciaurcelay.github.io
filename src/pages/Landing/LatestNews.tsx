@@ -5,10 +5,10 @@ import { newsItems } from '../../data/news'
 
 export default function LatestNews() {
   return (
-    <Section>
+    <Section maxWidthClassName="max-w-5xl">
       <SectionTitle>Latest</SectionTitle>
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {newsItems.map((item, index) => (
           <motion.div
             key={index}
