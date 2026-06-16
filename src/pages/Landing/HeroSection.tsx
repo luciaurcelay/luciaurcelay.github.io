@@ -68,14 +68,14 @@ export default function HeroSection() {
             design.
           </p>
           <p>
-            Current work focuses on using <strong>evolutionary patterns</strong> in proteins
-            and encoding them as design principles for{' '}
-            <strong>de novo protein generation</strong>. I'm primarily interested in {' '}
+             I'm primarily interested in {' '}
             <strong>structure-based generative models</strong>, flow matching and diffusion,
-            alongside <strong>protein language models</strong> and structure prediction. I am also drawn 
+            alongside <strong>protein language models</strong>. I am also drawn 
             to their applications to <strong>drug discovery</strong>, with a focus on{' '}
             <strong>antibody and nanobody design</strong> for <strong>immunotherapy</strong> and{' '}
-            <strong>oncology</strong>.
+            <strong>oncology</strong>. Current work focuses on using <strong>evolutionary patterns</strong> in proteins
+            and encoding them as design principles for{' '}
+            <strong>de novo protein generation</strong>.
           </p>
           <p className="text-primary-light">
             I'm always open to new collaborations, feel free to get in touch.
