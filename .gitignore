@@ -40,3 +40,4 @@ dist-ssr
 
 # Materials
 src/content/materials/*
+src/content/blog/materials/

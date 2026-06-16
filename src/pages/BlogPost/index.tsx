@@ -21,7 +21,7 @@ type Slot = {
 const SLOTS: Record<string, Slot> = {
   'molstar-complex-placeholder': {
     Component: MolstarViewerComplex,
-    wrapperClass: 'w-full rounded-sm overflow-hidden bg-neutral-50 my-10',
+    wrapperClass: 'w-full rounded-sm overflow-hidden bg-surface my-10',
     wrapperStyle: { height: '520px' },
   },
   'fm-distribution-morph': {
@@ -101,27 +101,10 @@ export default function BlogPost() {
   return (
     <div className="pb-16 md:pb-24">
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-        className="w-full px-6 md:px-12 lg:px-16 pt-4 md:pt-8"
-      >
-        <div className="max-w-4xl mx-auto">
-          <div className="aspect-[2/1] w-full overflow-hidden rounded-sm">
-            <img
-              src={post.coverImage}
-              alt={post.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="w-full px-6 md:px-12 lg:px-16 mt-10 md:mt-14"
+        transition={{ duration: 0.6 }}
+        className="w-full px-6 md:px-12 lg:px-16 pt-4 md:pt-8"
       >
         <article className="max-w-3xl mx-auto">
           <Link

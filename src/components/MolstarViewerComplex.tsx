@@ -10,9 +10,9 @@ import { Asset } from 'molstar/lib/mol-util/assets'
 import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 
-// Chain A (NiV-G glycoprotein target) — green
-const CHAIN_A_COLOR = Color(0x9fe3a2)
-const CHAIN_A_COLOR_SURFACE = Color(0xe6f5e7)
+// Chain A (NiV-G glycoprotein target) — pastel salmon
+const CHAIN_A_COLOR = Color(0xffb3a7)
+const CHAIN_A_COLOR_SURFACE = Color(0xffe9e5)
 
 // Chain B (designed nanobody) — same purple as landing page
 const CHAIN_B_COLOR = Color(0xa3a2fc)
@@ -159,7 +159,7 @@ export default function MolstarViewerComplex() {
           },
           renderer: {
             ...renderer,
-            backgroundColor: Color(0xffffff),
+            backgroundColor: Color(0xfaf9f6),
             colorMarker: true,
             highlightStrength: 0.5,
             selectStrength: 0.8,

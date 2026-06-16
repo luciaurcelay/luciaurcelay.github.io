@@ -69,7 +69,7 @@ This is a targeted, confidence-based substitution, conservative enough to preser
 
 `QVQLVESGGGLVQGGGSVRGSSAASGKDAEEVFNKHSQQWDLRPEQGLEAVAAIASAGGGTLDGWWWWEWFTISRQASKNTLYLQGRSLGAEATAVYYCAAVRGYFMRLAIHRDGVVWGQGTLVTVSSRGR`
 
-Below you can visualize the generated nanobody (purple) in complex with NiV-G–Ephrin-B2 (green).
+Below you can visualize the generated nanobody (purple) in complex with NiV-G–Ephrin-B2 (salmon).
 
 <div id="molstar-complex-placeholder"></div>
 
