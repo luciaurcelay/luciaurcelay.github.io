@@ -10,7 +10,7 @@ export default function Publications() {
       <Section className="pt-8 md:pt-12">
         <SectionTitle>Publications</SectionTitle>
 
-        <div className="space-y-10">
+        <div className="space-y-5">
           {publications.map((publication, index) => (
             <motion.div
               key={publication.title}

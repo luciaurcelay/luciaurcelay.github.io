@@ -12,7 +12,7 @@ export default function Blog() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
-            className="text-3xl md:text-4xl font-normal tracking-tight mb-12 md:mb-16"
+            className="text-2xl md:text-3xl font-normal tracking-tight mb-12 md:mb-16"
           >
             Blog
           </motion.h1>
@@ -29,22 +29,14 @@ export default function Blog() {
                   ease: 'easeOut',
                 }}
               >
-                <Link to={`/blog/${post.slug}`} className="group block py-6 border-b border-primary/10 first:border-t">
+                <Link to={`/blog/${post.slug}`} className="group block py-4 border-b border-primary/10 first:border-t">
                   <article className="flex gap-5 items-start">
-                    <div className="hidden sm:block flex-shrink-0 w-36 aspect-[16/10] overflow-hidden rounded-sm">
-                      <img
-                        src={post.thumbnailImage ?? post.coverImage}
-                        alt={post.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                      />
-                    </div>
-
-                    <div className="flex-1 space-y-2 min-w-0">
+                    <div className="flex-1 space-y-1 min-w-0">
                       <h2 className="text-lg font-medium tracking-tight group-hover:opacity-70 transition-opacity duration-200 leading-snug">
                         {post.title}
                       </h2>
 
-                      <p className="text-sm text-primary-light leading-relaxed line-clamp-2">
+                      <p className="font-serif text-sm text-primary-light leading-relaxed line-clamp-2">
                         {post.excerpt}
                       </p>
 

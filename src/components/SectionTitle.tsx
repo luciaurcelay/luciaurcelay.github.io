@@ -19,7 +19,7 @@ export default function SectionTitle({ children, as = 'h2' }: SectionTitleProps)
 
   return (
     <motion.div variants={titleVariants}>
-      <Tag className="text-3xl md:text-4xl font-normal tracking-tight mb-8 md:mb-12">
+      <Tag className="text-2xl md:text-3xl font-normal tracking-tight mb-8 md:mb-12">
         {children}
       </Tag>
     </motion.div>

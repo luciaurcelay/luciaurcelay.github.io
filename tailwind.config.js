@@ -10,6 +10,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+        serif: ['"Times New Roman"', 'Times', 'Georgia', 'serif'],
       },
       colors: {
         primary: {
@@ -17,7 +18,7 @@ export default {
           light: '#565656',
         },
         surface: {
-          DEFAULT: '#ffffff',
+          DEFAULT: '#FAF9F6',
           muted: '#f8f8f8',
         },
         accent: {
@@ -26,7 +27,18 @@ export default {
         }
       },
       fontSize: {
-        '2xs': '0.8125rem', // 13px
+        '2xs': ['0.75rem', '1rem'],        // 12px
+        'xs': ['0.6875rem', '1rem'],       // 11px
+        'sm': ['0.8125rem', '1.2rem'],     // 13px
+        'base': ['0.9375rem', '1.45rem'],  // 15px
+        'lg': ['1rem', '1.6rem'],          // 16px
+        'xl': ['1.125rem', '1.65rem'],     // 18px
+        '2xl': ['1.375rem', '1.85rem'],    // 22px
+        '3xl': ['1.6875rem', '2.05rem'],   // 27px
+        '4xl': ['2rem', '2.3rem'],         // 32px
+        '5xl': ['2.625rem', '1'],          // 42px
+        '6xl': ['3.375rem', '1'],          // 54px
+        '7xl': ['4rem', '1'],              // 64px
       },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out forwards',

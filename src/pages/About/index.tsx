@@ -6,14 +6,14 @@ export default function About() {
     <div className="flex flex-col gap-24 md:gap-32 pb-16 md:pb-24">
       {/* Intro section */}
       <section className="w-full px-6 md:px-12 lg:px-16 pt-8 md:pt-12">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
             {/* Profile image */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="lg:col-span-6"
+              className="lg:col-span-5"
             >
               <div className="aspect-[1.4/1] w-full rounded-sm overflow-hidden">
                 <img
@@ -29,14 +29,14 @@ export default function About() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-6 space-y-8"
+              className="lg:col-span-7 space-y-8"
             >
-              <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-center lg:text-left">
+              <h1 className="text-xl md:text-2xl font-medium tracking-tight text-center lg:text-left">
                 Lucia
               </h1>
 
-              <p className="text-lg md:text-xl leading-relaxed">
-                I&apos;m a <strong>Machine Learning Scientist</strong> working at the Centre for Genomic 
+              <p className="font-serif text-lg md:text-xl leading-relaxed">
+                I&apos;m a <strong>Machine Learning Scientist</strong> working at the Centre for Genomic
                 Regulation. I hold a bachelor&apos;s degree in Biomedical Engineering as well as a master&apos;s degree
                 in Artificial Intelligence from UPC. When I&apos;m not working you can find me doing yoga and oil painting.
               </p>
@@ -47,7 +47,7 @@ export default function About() {
 
       {/* Experience section */}
       <section className="w-full px-6 md:px-12 lg:px-16">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20">
             {/* What I do now */}
             <motion.article
@@ -57,9 +57,9 @@ export default function About() {
               transition={{ duration: 0.6 }}
               className="space-y-5"
             >
-              <h2 className="text-2xl font-medium">What I do now</h2>
+              <h2 className="text-xl font-medium">What I do now</h2>
 
-              <div className="text-lg md:text-xl leading-relaxed space-y-5">
+              <div className="font-serif text-lg md:text-xl leading-relaxed space-y-5">
                 <p>
                   Current research focuses on uncovering evolutionary patterns in proteins and
                   using them as design principles for <strong>de novo protein generation</strong>. At Ferruz Lab
@@ -95,9 +95,9 @@ export default function About() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="space-y-5"
             >
-              <h2 className="text-2xl font-medium">What I used to do</h2>
+              <h2 className="text-xl font-medium">What I used to do</h2>
 
-              <div className="text-lg md:text-xl leading-relaxed space-y-5">
+              <div className="font-serif text-lg md:text-xl leading-relaxed space-y-5">
                 <p>
                   Prior to joining CRG, I was a postgraduate intern in <strong>Novartis Institute of
                   Biomedical Research</strong> (Basel, Switzerland). My work was focused on

@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Absans font - extracted from absans-main */
-@font-face {
-  font-family: 'Absans';
-  src: url('/fonts/Absans-Regular.woff2') format('woff2'),
-       url('/fonts/Absans-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 @layer base {
   /* Helvetica Neue font stack with system fallbacks */
   html {
@@ -120,13 +110,25 @@
     box-shadow: none !important;
   }
 
-  /* Blog content typography overrides */
+  /* Blog content typography overrides — serif body, sans-serif headings */
   .blog-content {
-    font-family: 'Helvetica Neue', Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Times New Roman', Times, Georgia, serif;
+  }
+
+  /* Scale down prose body text (overrides prose-lg's 1.125rem base) */
+  .blog-content.prose {
+    font-size: 1rem;
   }
 
   .blog-content a {
     transition: opacity 0.2s ease;
+  }
+
+  .blog-content h1,
+  .blog-content h2,
+  .blog-content h3,
+  .blog-content h4 {
+    font-family: 'Helvetica Neue', Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .blog-content h2 {

@@ -164,7 +164,7 @@ export default function MolstarViewer() {
           },
           renderer: {
             ...renderer,
-            backgroundColor: Color(0xffffff),
+            backgroundColor: Color(0xfaf9f6),
             colorMarker: false,
             highlightStrength: 0,
             selectStrength: 0,
