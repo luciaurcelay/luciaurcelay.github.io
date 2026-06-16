@@ -10,6 +10,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@fontsource-variable/newsreader": "^5.2.10",
     "@tailwindcss/typography": "^0.5.19",
     "d3-random": "^3.0.1",
     "d3-scale": "^4.0.2",

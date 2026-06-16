@@ -112,7 +112,7 @@
 
   /* Blog content typography overrides — serif body, sans-serif headings */
   .blog-content {
-    font-family: 'Times New Roman', Times, Georgia, serif;
+    font-family: 'Newsreader Variable', 'Newsreader', 'Times New Roman', Times, Georgia, serif;
   }
 
   /* Scale down prose body text (overrides prose-lg's 1.125rem base) */

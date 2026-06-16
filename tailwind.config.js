@@ -10,7 +10,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-        serif: ['"Times New Roman"', 'Times', 'Georgia', 'serif'],
+        serif: ['"Newsreader Variable"', 'Newsreader', '"Times New Roman"', 'Times', 'Georgia', 'serif'],
       },
       colors: {
         primary: {
