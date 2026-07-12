@@ -4,8 +4,6 @@ date: 17/05/2026
 
 ## Introduction
 
-A few years ago, score-based diffusion was the only serious answer to "how do you train a deep generative model that beats GANs on image quality without their training pathologies?" Today, that title has quietly passed to **flow matching**. Stable Diffusion 3, the latest video models, most state-of-the-art protein generators — they all train velocity fields with a flow-matching objective rather than scores with a denoising one. The mathematics is, in some sense, the same. The training recipe is much simpler.
-
 This post is a primer on the fundamentals of flow matching: the probability paths it builds, the velocity fields it learns, the loss it minimizes, and the algorithms that train and sample from it. We will work in two dimensions throughout so every idea has a picture next to it. A follow-up post will take these tools into protein design, where flow matching has become the new default for generating structures and binders.
 
 ## The generative modeling problem
