@@ -20,8 +20,11 @@ const GRID_Y = 16
 const ARROW_MAX = 14
 const MAG_CAP = 3.2
 
-// Closed-form marginal velocity field for OT flow from N(0,I) to a
-// Gaussian mixture (point-mass modes, σ_target → 0 limit).
+// Closed-form marginal velocity field for OT flow from N(0,I) to a Gaussian
+// mixture: a posterior-weighted average of the conditional velocities
+// (m − x)/(1 − t). The modes carry a small σ_target² = 0.04 (the +0.04 in
+// var_xt) so the posterior stays well-conditioned as t → 1; with true point
+// masses the weights saturate and the field blows up near the endpoint.
 function marginalVelocity(
   x: number,
   y: number,

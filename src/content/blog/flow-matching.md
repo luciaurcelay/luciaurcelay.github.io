@@ -74,7 +74,7 @@ $$
 p_t(\cdot \mid x_1)
 $$
 
-that interpolates from $p_0$ at $t=0$ to a Dirac at $x_1$ at $t=1$. Inside this conditional path, the velocity field is whatever we say it is, because *we built the path*. The promise — and we will see in a moment why it holds — is that training the network to match all of these conditional fields, one per data point, is the same as training it to match the unknown marginal field that we wanted in the first place.
+that interpolates from $p_0$ at $t=0$ to a Dirac at $x_1$ at $t=1$. Inside this conditional path, the velocity field is whatever we say it is, because *we built the path*. The promise — and we will see in a moment why it holds — is that training the network to match all of these conditional fields, one per data point, drives it to the same optimum as matching the unknown marginal field we wanted in the first place.
 
 <div id="fm-conditional-paths"></div>
 
@@ -96,6 +96,8 @@ $$
 
 It does not get simpler than that. The label is a single difference: end point minus start point. There is no variance schedule to tune, no SDE coefficients, no separate noise grid. And because each conditional path is a straight line at constant speed, the *marginal* trajectories — averaged over the data — tend to stay close to straight too, which translates directly into fewer ODE steps at inference. They are not literally straight: where conditional paths overlap, the marginal field bends, as the velocity-field animation already showed.
 
+One caveat about the name, because it trips people up. The "optimal transport" here is a statement about the *conditional* path only — each individual path, from a noise sample to its assigned $x_1$, is the OT interpolation. It is emphatically **not** a claim that the trained model realizes the optimal transport map between $p_0$ and $p_\text{data}$. It does not, and it cannot: we draw $x_0$ and $x_1$ *independently*, so the coupling flow matching is trained against is the product of the two marginals — about as far from the OT coupling as a coupling can be. Straight conditional paths, crossing everywhere, produce a curved marginal field. Getting the *coupling* closer to optimal is a separate problem, and it is exactly what minibatch-OT flow matching and rectified flow are for — the latter we come to below.
+
 OT paths are not the only choice. Diffusion-style "variance-preserving" and "variance-exploding" probability paths fit perfectly well into the flow matching framework; they just produce a curvier $v_t$ and need more steps to integrate. The dominant practical recipe is OT, and we will use it for the rest of this post. *(The animations below use a tiny but nonzero $\sigma_\text{target}^2$ to avoid numerical blow-up of the marginal field near $t = 1$; the conclusions are unchanged.)*
 
 ## The Conditional Flow Matching loss
@@ -113,10 +115,12 @@ The reason this works is one of the prettier facts in the area. Consider a point
 It minimizes squared error. The minimum-MSE estimate of two conflicting labels weighted by how often they occur is their conditional expectation. Once $(x_t, x_1)$ are fixed, the OT path pins down $x_0 = (x_t - t\,x_1)/(1-t)$, so the label simplifies to $x_1 - x_0 = (x_1 - x_t)/(1-t)$. Carrying this through, the optimum is
 
 $$
-v_\theta^\ast(x_t, t) = \mathbb{E}_{x_1 \sim p_\text{data}(\,\cdot\, \mid x_t)}\!\left[\frac{x_1 - x_t}{1 - t}\right] = u_t(x_t),
+v^\star(x_t, t) = \mathbb{E}_{x_1 \sim p_\text{data}(\,\cdot\, \mid x_t)}\!\left[\frac{x_1 - x_t}{1 - t}\right] = u_t(x_t),
 $$
 
-the *marginal* velocity field — exactly the object we were trying to learn but did not know how to write down. The conflict at the level of individual labels is precisely what produces the right answer at the level of expectations. We chose a tractable conditional objective and got the intractable marginal objective for free.
+the *marginal* velocity field — exactly the object we were trying to learn but did not know how to write down. The conflict at the level of individual labels is precisely what produces the right answer at the level of expectations.
+
+It is worth being careful about what exactly is equal here, since it is easy to overstate. $\mathcal{L}_\text{CFM}$ and $\mathcal{L}_\text{FM}$ are *not* the same number: the conditional loss keeps an irreducible variance term, because no function of $(x_t, t)$ can predict the individual label $x_1 - x_0$ once several data points could have produced the same $x_t$. What the two losses share is everything that depends on $\theta$. They differ by a constant the network cannot influence, so they have identical gradients and therefore the same minimizer. We cannot evaluate the objective we care about, but we can descend it — which is all training ever needed.
 
 <div id="fm-marginal-averaging"></div>
 
@@ -130,14 +134,14 @@ The full training loop for OT-flow-matching fits in eight lines.
 2. **Sample noise.** Draw $x_0 \sim \mathcal{N}(0, I)$.
 3. **Sample time.** Draw $t \sim \mathcal{U}[0, 1]$.
 4. **Interpolate.** Set $x_t = (1-t)\, x_0 + t\, x_1$.
-5. **Compute the velocity label.** Set $v^\ast = x_1 - x_0$.
+5. **Compute the velocity label.** Set $u = x_1 - x_0$.
 6. **Predict.** Evaluate $v_\theta(x_t, t)$.
-7. **Loss.** Compute $\lVert v_\theta(x_t, t) - v^\ast \rVert^2$.
+7. **Loss.** Compute $\lVert v_\theta(x_t, t) - u \rVert^2$.
 8. **Step.** Take a gradient step in $\theta$.
 
 That is the whole thing. There is no buffer of noisy latents, no schedule of variances to anneal, no separate score head. The network sees a linear interpolation between a real data point and a Gaussian sample, asks itself which direction it should be moving, and is told. Iterate; the marginal field emerges.
 
-A few small implementation notes are worth knowing. Time is usually sampled from a non-uniform distribution biased toward intermediate $t$, since the velocity label is largest there and the corresponding gradient signal is strongest. The network conditioning on $t$ is most often a sinusoidal embedding plus an MLP, as in diffusion models. And the architecture itself — UNet for images, transformer for protein structures or sequences — is essentially the same one that worked for score matching. Flow matching is a training recipe, not an architecture.
+A few small implementation notes are worth knowing. Large-scale models often replace the uniform $t \sim \mathcal{U}[0,1]$ with a distribution biased toward intermediate $t$ — Stable Diffusion 3 uses a logit-normal, for instance. The reason is *not* that the label is bigger there: in OT flow matching the label $x_1 - x_0$ does not depend on $t$ at all, so every time slice carries a label of the same expected magnitude. What changes with $t$ is the *difficulty* of the regression. Near $t = 0$ the input is almost pure noise and the best possible prediction is roughly $\mathbb{E}[x_1] - x_0$; near $t = 1$ the input almost determines $x_1$. Both ends are close to trivial, and the residual error is concentrated in the middle, so that is where extra samples buy the most. The network conditioning on $t$ is most often a sinusoidal embedding plus an MLP, as in diffusion models. And the architecture itself — UNet for images, transformer for protein structures or sequences — is essentially the same one that worked for score matching. Flow matching is a training recipe, not an architecture.
 
 ## Inference
 
@@ -169,7 +173,7 @@ The reflow procedure breaks that independence. After training a first model $v_\
 
 <div id="fm-reflow-demo"></div>
 
-The animation cycles through the reflow iterations of a tiny 1D-to-1D problem. The initial random coupling has many crossings. After a few iterations the lines untangle into a near-monotone matching, and the resulting flow can be integrated in a handful of Euler steps — sometimes one. Whether this is worth the cost of retraining depends on how often you plan to sample, but for large-scale image and protein models, rectified flow shows up everywhere.
+The animation is a geometric stand-in for reflow on a small 2D coupling: rather than train a model and integrate it, it simply removes crossings from the segments directly, which is the effect reflow has. The initial independent coupling is a tangle. As the crossings come out, the transport untangles into a near-monotone matching whose straight-line paths barely interfere, and a flow like that can be integrated in a handful of Euler steps — sometimes one. Whether this is worth the cost of retraining depends on how often you plan to sample, but for large-scale image and protein models, rectified flow shows up everywhere.
 
 ## Flow matching vs. diffusion
 
@@ -180,10 +184,16 @@ A score-based diffusion model defines a stochastic process — typically varianc
 The two are connected by an explicit affine identity. For any Gaussian-conditional probability path $p_t(x \mid x_1) = \mathcal{N}(\alpha_t x_1, \sigma_t^2 I)$ — which covers OT, variance-preserving, and variance-exploding paths as special cases — the marginal velocity field can be written as
 
 $$
-v_t(x) = \frac{\dot\alpha_t}{\alpha_t}\,x \;-\; \left(\frac{\dot\alpha_t}{\alpha_t}\sigma_t^2 - \dot\sigma_t\, \sigma_t\right) \nabla_x \log p_t(x).
+v_t(x) = \frac{\dot\alpha_t}{\alpha_t}\,x \;+\; \left(\frac{\dot\alpha_t}{\alpha_t}\sigma_t^2 - \dot\sigma_t\, \sigma_t\right) \nabla_x \log p_t(x).
 $$
 
-For the OT schedule ($\alpha_t = t$, $\sigma_t = 1 - t$) this collapses to $v_t(x) = (1/t)\,x - ((1-t)/t)\, \nabla_x \log p_t(x)$. A score model is, up to a closed-form transformation, a velocity model — and vice versa.
+For the OT schedule ($\alpha_t = t$, $\sigma_t = 1 - t$) we have $\dot\alpha_t / \alpha_t = 1/t$, and the score coefficient evaluates to $(1-t)^2/t + (1-t) = (1-t)/t$, so the identity collapses to
+
+$$
+v_t(x) = \frac{1}{t}\Bigl[\, x + (1 - t)\, \nabla_x \log p_t(x) \,\Bigr].
+$$
+
+The $1/t$ looks alarming, but the singularity is removable: at $t = 0$ we have $p_0 = \mathcal{N}(0, I)$, whose score is exactly $\nabla_x \log p_0(x) = -x$, so the bracket vanishes and the field stays finite. A score model is, up to a closed-form transformation, a velocity model — and vice versa.
 
 What flow matching changes is the *training* path: straight, deterministic, with a closed-form $u_t$, no SDE-to-reverse-SDE bookkeeping, and a loss that does not need importance weighting across noise scales. Empirically this trains faster, scales better, and produces flatter trajectories that need fewer integration steps. Nothing about flow matching is *more expressive* than diffusion. It is a more efficient parameterization of the same idea.
 
