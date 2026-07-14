@@ -10,7 +10,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="float-right ml-5 sm:ml-8 mb-4 sm:mb-5"
+          className="float-left mr-5 sm:mr-8 mb-4 sm:mb-5"
         >
           <div className="w-40 h-52 sm:w-52 sm:h-64 lg:w-56 lg:h-72 rounded-sm overflow-hidden">
             <img
@@ -78,7 +78,14 @@ export default function HeroSection() {
             <strong>de novo protein generation</strong>.
           </p>
           <p className="text-primary-light">
-            I'm always open to new collaborations, feel free to get in touch.
+            I'm always open to new collaborations, feel free to{' '}
+            <a
+              href="#contact"
+              className="underline underline-offset-2 hover:opacity-70 transition-opacity duration-200"
+            >
+              get in touch
+            </a>
+            .
           </p>
         </motion.div>
       </div>

@@ -25,11 +25,12 @@ export default function Footer() {
 
   return (
     <motion.footer
+      id="contact"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className="w-full px-6 md:px-12 lg:px-16 py-12 md:py-16"
+      className="w-full px-6 md:px-12 lg:px-16 py-12 md:py-16 scroll-mt-24"
     >
       <div className="max-w-6xl mx-auto">
         {/* Separator */}

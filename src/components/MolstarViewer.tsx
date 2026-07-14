@@ -13,6 +13,22 @@ import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 const CHAIN_B_COLOR = Color(0xa3a2fc)
 const CHAIN_B_COLOR_SURFACE = Color(0xf2f5ff)
 
+// Padding around the structure's bounding sphere. The sphere circumscribes the structure and
+// is rotation-invariant, so fitting it is already clip-proof under the spin animation; this is
+// just a small safety margin on top. Raise it to pull the camera back, lower it to fill more.
+const CAMERA_PADDING = 1.1
+
+const fitCamera = (plugin: PluginUIContext) => {
+  plugin.canvas3d?.requestCameraReset({
+    durationMs: 0,
+    snapshot: (scene, camera) =>
+      camera.getFocus(
+        scene.boundingSphereVisible.center,
+        scene.boundingSphereVisible.radius * CAMERA_PADDING,
+      ),
+  })
+}
+
 const chainSelection = (chainId: string) =>
   MS.struct.generator.atomGroups({
     'chain-test': MS.core.rel.eq([MS.struct.atomProperty.macromolecular.auth_asym_id(), chainId]),
@@ -85,6 +101,7 @@ export default function MolstarViewer() {
 
   useEffect(() => {
     let disposed = false
+    let observer: ResizeObserver | null = null
 
     const init = async () => {
       if (!containerRef.current || disposed) return
@@ -263,12 +280,27 @@ export default function MolstarViewer() {
           },
         })
       }
+
+      if (disposed) return
+
+      fitCamera(plugin)
+
+      // The viewer's column narrows on smaller screens; re-fit so the structure stays
+      // inside the canvas instead of being cropped at the framing chosen on first load.
+      if (containerRef.current) {
+        observer = new ResizeObserver(() => {
+          plugin.handleResize?.()
+          fitCamera(plugin)
+        })
+        observer.observe(containerRef.current)
+      }
     }
 
     init()
 
     return () => {
       disposed = true
+      observer?.disconnect()
       pluginRef.current?.dispose()
       pluginRef.current = null
       if (containerRef.current) containerRef.current.innerHTML = ''
