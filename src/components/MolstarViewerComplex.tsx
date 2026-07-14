@@ -8,6 +8,7 @@ import { MolScriptBuilder as MS } from 'molstar/lib/mol-script/language/builder'
 import { Color } from 'molstar/lib/mol-util/color'
 import { Asset } from 'molstar/lib/mol-util/assets'
 import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
+import { fitCamera } from '../utils/molstarCamera'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 
 // Chain A (NiV-G glycoprotein target) — pastel salmon
@@ -74,6 +75,8 @@ export default function MolstarViewerComplex() {
 
   useEffect(() => {
     let disposed = false
+    let observer: ResizeObserver | null = null
+    let cleanupListeners: (() => void) | null = null
 
     const init = async () => {
       if (!containerRef.current || disposed) return
@@ -253,12 +256,40 @@ export default function MolstarViewerComplex() {
           },
         })
       }
+
+      if (disposed || !containerRef.current) return
+
+      fitCamera(plugin)
+
+      // Re-fit when the container resizes, so a narrower column doesn't crop the complex.
+      // This viewer is interactive, so stop once the reader has moved the camera themselves —
+      // re-framing then would throw away the view they set up.
+      const container = containerRef.current
+      let cameraIsOurs = true
+      const releaseCamera = () => {
+        cameraIsOurs = false
+      }
+      container.addEventListener('pointerdown', releaseCamera)
+      container.addEventListener('wheel', releaseCamera, { passive: true })
+
+      observer = new ResizeObserver(() => {
+        plugin.handleResize?.()
+        if (cameraIsOurs) fitCamera(plugin)
+      })
+      observer.observe(container)
+
+      cleanupListeners = () => {
+        container.removeEventListener('pointerdown', releaseCamera)
+        container.removeEventListener('wheel', releaseCamera)
+      }
     }
 
     init()
 
     return () => {
       disposed = true
+      observer?.disconnect()
+      cleanupListeners?.()
       pluginRef.current?.dispose()
       pluginRef.current = null
       if (containerRef.current) containerRef.current.innerHTML = ''

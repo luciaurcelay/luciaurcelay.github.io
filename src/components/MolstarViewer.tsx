@@ -8,26 +8,11 @@ import { MolScriptBuilder as MS } from 'molstar/lib/mol-script/language/builder'
 import { Color } from 'molstar/lib/mol-util/color'
 import { Asset } from 'molstar/lib/mol-util/assets'
 import { PluginUIContext } from 'molstar/lib/mol-plugin-ui/context'
+import { fitCamera } from '../utils/molstarCamera'
 import 'molstar/lib/mol-plugin-ui/skin/light.scss'
 
 const CHAIN_B_COLOR = Color(0xa3a2fc)
 const CHAIN_B_COLOR_SURFACE = Color(0xf2f5ff)
-
-// Padding around the structure's bounding sphere. The sphere circumscribes the structure and
-// is rotation-invariant, so fitting it is already clip-proof under the spin animation; this is
-// just a small safety margin on top. Raise it to pull the camera back, lower it to fill more.
-const CAMERA_PADDING = 1.1
-
-const fitCamera = (plugin: PluginUIContext) => {
-  plugin.canvas3d?.requestCameraReset({
-    durationMs: 0,
-    snapshot: (scene, camera) =>
-      camera.getFocus(
-        scene.boundingSphereVisible.center,
-        scene.boundingSphereVisible.radius * CAMERA_PADDING,
-      ),
-  })
-}
 
 const chainSelection = (chainId: string) =>
   MS.struct.generator.atomGroups({
