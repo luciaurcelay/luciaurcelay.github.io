@@ -17,6 +17,11 @@ export const reviewItems: ReviewItem[] = [
     role: 'Reviewer',
     year: '2026',
   },
+  {
+    venue: 'NeurIPS - AI4DD Workshop',
+    role: 'Reviewer',
+    year: '2026',
+  },
 ]
 
 export const supervisionItems: SupervisionItem[] = [
