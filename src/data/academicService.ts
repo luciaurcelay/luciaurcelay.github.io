@@ -13,15 +13,15 @@ export interface SupervisionItem {
 
 export const reviewItems: ReviewItem[] = [
   {
-    venue: 'Nature Communications Biology',
-    role: 'Reviewer',
-    year: '2026',
-  },
-  {
     venue: 'NeurIPS - AI4DD Workshop',
     role: 'Reviewer',
     year: '2026',
   },
+  {
+    venue: 'Nature Communications Biology',
+    role: 'Reviewer',
+    year: '2026',
+  }  
 ]
 
 export const supervisionItems: SupervisionItem[] = [
