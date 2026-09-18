@@ -48,11 +48,17 @@ export default function PublicationCard({ publication }: PublicationCardProps) {
 
           <p className="font-serif text-sm text-primary-light italic">{publication.venue}</p>
 
-          <div className="pt-1">
-            <ExternalLink href={publication.paperUrl} className="text-sm">
-              Paper
-            </ExternalLink>
-          </div>
+          {publication.note && (
+            <p className="font-serif text-xs text-primary/60">{publication.note}</p>
+          )}
+
+          {publication.paperUrl && (
+            <div className="pt-1">
+              <ExternalLink href={publication.paperUrl} className="text-sm">
+                Paper
+              </ExternalLink>
+            </div>
+          )}
         </div>
       </div>
     </article>

@@ -3,10 +3,27 @@ export interface Publication {
   title: string
   authors: string
   venue: string
-  paperUrl: string
+  paperUrl?: string
+  note?: string
 }
 
 export const publications: Publication[] = [
+  {
+    year: '2026',
+    title:
+      'Stroma: A Unified Benchmark for Motif Scaffolding Across Protein Generative Paradigms',
+    authors: 'Lucia Urcelay, Romain Pastre, Noelia Ferruz',
+    venue: 'Preprint, 2026',
+  },
+  {
+    year: '2026',
+    title:
+      'Generative Latent Priors for Interpreting and Steering Protein Language Models',
+    authors: 'Daniel Hinjos†, Lucia Urcelay†',
+    venue: 'In peer review, 2026',
+    note: '† Equal contribution',
+    paperUrl: '/papers/GLP_PLM.pdf',
+  },
   {
     year: '2025',
     title: 'Automatic Evaluation of Healthcare LLMs Beyond Question-Answering',
