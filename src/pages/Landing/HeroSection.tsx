@@ -16,6 +16,10 @@ export default function HeroSection() {
             <img
               src="/landing_pfp.jpg"
               alt="Lucia Urcelay Ganzabal"
+              width={640}
+              height={853}
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>
