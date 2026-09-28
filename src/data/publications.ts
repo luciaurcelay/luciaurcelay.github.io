@@ -13,7 +13,8 @@ export const publications: Publication[] = [
     title:
       'Stroma: A Unified Benchmark for Motif Scaffolding Across Protein Generative Paradigms',
     authors: 'Lucia Urcelay, Romain Pastre, Noelia Ferruz',
-    venue: 'Preprint, 2026',
+    venue: 'In peer review, 2026',
+    paperUrl: '/papers/stroma_urcelay.pdf',
   },
   {
     year: '2026',
