@@ -21,7 +21,7 @@ export const publications: Publication[] = [
     title:
       'Generative Latent Priors for Interpreting and Steering Protein Language Models',
     authors: 'Daniel Hinjos†, Lucia Urcelay†',
-    venue: 'In peer review, 2026',
+    venue: 'NeurIPS Interp4Discovery Workshop, 2026',
     note: '† Equal contribution',
     paperUrl: '/papers/GLP_PLM.pdf',
   },
