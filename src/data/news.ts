@@ -5,7 +5,7 @@ export interface NewsItem {
 
 export const newsItems: NewsItem[] = [
   {
-    text: 'Second prize in Apheris x OpenFold Hackathon on multiple protein conformation prediction (London, 2 October)',
+    text: 'Second place at the Apheris x OpenFold Hackathon on multiple protein conformation prediction, London, UK',
     date: '02.10.2026',
   },
   {
