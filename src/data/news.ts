@@ -5,19 +5,19 @@ export interface NewsItem {
 
 export const newsItems: NewsItem[] = [
   {
-    text: 'GENERATIVE LATENT PRIORS FOR INTERPRETING AND STEERING PROTEIN LANGUAGE MODELS ACCEPTED IN NEURIPS INTERP4DISCOVERY WORKSHOP',
+    text: 'Generative Latent Priors for Interpreting and Steering Protein Language Models accepted in NeurIPS Interp4Discovery Workshop',
     date: '29.09.2026',
   },
   {
-    text: 'ATTENDED ELLIS SUMMER SCHOOL ON PROBABILISTIC MACHINE LEARNING, UNIVERSITY OF CAMBRIDGE, UK',
+    text: 'Attended ELLIS Summer School on Probabilistic Machine Learning, University of Cambridge, UK',
     date: '13.07.2026',
   },
   {
-    text: 'STARTED NEW POSITION AS MACHINE LEARNING SCIENTIST AT FERRUZ LAB, CRG, BARCELONA',
+    text: 'Started new position as Machine Learning Scientist at Ferruz Lab, CRG, Barcelona',
     date: '01.02.2025',
   },
   {
-    text: 'COMPLETED INTERNSHIP IN ONCOLOGY DATA SCIENCE AT NOVARTIS, BASEL, SWITZERLAND',
+    text: 'Completed internship in Oncology Data Science at Novartis, Basel, Switzerland',
     date: '12.12.2024',
   },
 ]
